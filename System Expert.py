@@ -1,29 +1,27 @@
 
+from basedefaits import *
+from basederegles import *
+from moteurdinference import *
+
 #    une base de faits
 #    une base de règles
 #    un moteur d'inférence.
 
-class baseDeFaits:
-    
+class regle:
+
     def __init__(self):
-        self.faits = {}
-
-    def __str__(self):
-        str = ""
-        for cle, valeur in self.faits.items():
-            str += "{}: {}\n".format(cle, valeur)
-        return str
-
-    def ajouter_fait(self, cle, valeur):
-        self.faits[cle] = valeur
-
-    def valeur_fait(self, cle):
-        if cle not in self.faits:
-            self.ajouter_fait(cle, None)
-        return self.faits[cle]
+        self.premisse = []
+        self.conclusion = 5
 
 
-base_test = baseDeFaits()
+class baseDeRegles:
+
+    def __init__(self):
+        self.regles = []
+    
+
+
+base_test = BaseDeFaits()
 base_test.ajouter_fait("Grand", True)
 print(base_test)
 base_test.ajouter_fait("Taille", 108)
