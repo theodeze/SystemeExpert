@@ -1,7 +1,7 @@
 
-from basedefaits import *
-from basederegles import *
-from moteurdinference import *
+from systemeexpert.basedefaits import *
+from systemeexpert.basederegles import *
+from systemeexpert.moteurdinference import *
 
 #    une base de faits
 #    une base de règles

@@ -53,6 +53,7 @@ class Regle:
     def __init__(self, conclusion):
         self.premisse = []
         self.conclusion = conclusion
+        self.est_desactive = False
 
     def __str__(self):
         str = ""
@@ -63,7 +64,7 @@ class Regle:
                 premiere = False
             else:
                 str += "ET    " + proposition + "\n"
-        str += "ALORS " + self.conclusion
+        str += "ALORS " + self.conclusion + "\n"
 
     def ajouter_premisse(self, proposition):
         if not isinstance(proposition, Proposition):
@@ -72,10 +73,53 @@ class Regle:
 
     def applicable(self, basedefaits):
         applicable = True
+        if self.desactiver:
+            applicable = False
         for proposition in self.premisse:
             applicable = applicable and proposition.valeur(basedefaits)
         return applicable
     
     def appliquer(self, basedefaits):
-        if self.conclusion.applicable(basedefaits):
+        if self.conclusion.applicable(basedefaits) and not self.est_desactive:
             self.conclusion.ajouter(basedefaits)
+    
+    def desactiver(self):
+        self.est_desactive = True
+
+    def activer(self):
+        self.est_desactive = False
+
+
+class BaseDeRegle: 
+
+    def __init__(self):
+        self.regles = []
+    
+    def __str__(self):
+        str = "=============\n"
+        str += "Base de rêgle\n"
+        for regle in self.regles:
+            str += regle
+        str += "=============\n"
+        return str
+
+    def ajouter_regle(self, regle):
+        if not isinstance(regle, Regle):
+            raise TypeError("regle doit être une regle")
+        self.regles.append(regle)
+
+    def applicable(self, basedefaits):
+        applicable = True
+        for regle in self.regles:
+            applicable = applicable and regle.applicable(basedefaits)
+        return applicable            
+    
+    def selection(self, basedefaits):
+        for regle in self.regles:
+            if regle.applicable(basedefaits):
+                return regle
+        return None
+
+    def activer_tous(self):
+        for regle in self.regles:
+            regle.activer()
