@@ -1,36 +1,55 @@
 from basedefaits import Fait
+from basederegles import Regle, Proposition, Operateur
 
 class Lecteur:
 
-    def __init__(self):
+    def __init__(self, nom_fichier):
+        self.nom_fichier = nom_fichier
         self.clasf = 0
 
-    def lire_fichier(self, basedefaits, base_regles):
-        with open("fichier.txt") as fichier:
+    def lire_fichier(self, basedefaits, basederegles):
+        with open(self.nom_fichier) as fichier:
             l = 0
-            nb_utiles = []
             for lignes in fichier:
-                if l == 0:
-                    nb_utiles=lignes.split(" ")
-                    
-                if l > 0 and l <= int(nb_utiles[0]):
-                    string=lignes.split("\n")[0]
+
+                if ":=" in lignes:
+                    string = lignes.split("\n")[0]
+                    conclusions = self.decoupageBaseRegles(string)[0]
+                    premises = self.decoupageBaseRegles(string)[1]
+                    regle = Regle()
+                    for conclusion in conclusions.split("&"):
+                        regle.ajouter_conclusion(Proposition(conclusion, Operateur.AFFECTATION, True))
+                    for premise in premises.split("&"):
+                        if "==" in premise:
+                            regle.ajouter_premisse(Proposition(premise.split("==")[0], Operateur.EGALITE, self.analyseType(premise.split("==")[1])))
+                        elif "!=" in premise:
+                            regle.ajouter_premisse(Proposition(premise.split("!=")[0], Operateur.INEGALITE, self.analyseType(premise.split("!=")[1])))
+                        elif "<=" in premise:
+                            regle.ajouter_premisse(Proposition(premise.split("<=")[0], Operateur.INFERIORITEOUEGALITE, self.analyseType(premise.split("<=")[1])))
+                        elif "<" in premise:
+                            regle.ajouter_premisse(Proposition(premise.split("<")[0], Operateur.INFERIORITE, self.analyseType(premise.split("<")[1])))
+                        elif ">=" in premise:
+                            regle.ajouter_premisse(Proposition(premise.split(">=")[0], Operateur.SUPERIORITEOUEGALITE, self.analyseType(premise.split(">=")[1])))
+                        elif ">" in premise:
+                            regle.ajouter_premisse(Proposition(premise.split(">")[0], Operateur.SUPERIORITE, self.analyseType(premise.split(">")[1])))
+                    basederegles.ajouter_regle(regle) 
+
+                else:
+                    string = lignes.split("\n")[0]
                     basedefaits.ajouter_fait(Fait(self.decoupageBaseFaits(string)[0],self.analyseType(self.decoupageBaseFaits(string)[1])))
 
                 l +=1
-                #if l > int(nb_utiles[0]):
-                #    self.remplirTableau(base_regles,lignes.split("\n")[0])        
         fichier.close()
 
     def remplirTableau(self, tableau, string):
         return tableau.append(string)
         
     def analyseType(self, valeur):
-        if (valeur.isdigit()):
+        if valeur.isdigit():
             return int(valeur)
-        elif (valeur=="True"):
+        elif valeur=="True":
             return True
-        elif (valeur=="False"):
+        elif valeur=="False":
             return False
         else :
             return valeur
@@ -39,4 +58,4 @@ class Lecteur:
         return string.split("=")
 
     def decoupageBaseRegles(self, string):
-        return string.split("")
+        return string.split(":=")

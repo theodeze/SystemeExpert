@@ -1,7 +1,7 @@
 # coding=utf8
 from enum import Enum, unique
 
-from basedefaits import *
+from basedefaits import BaseDeFaits, Fait
 
 @unique
 class Operateur(Enum):
@@ -31,18 +31,21 @@ class Proposition:
 
     def valeur(self, basedefaits):
         value = False
+        value_fait = basedefaits.valeur_fait(self.expression)
+        if basedefaits.valeur_fait(self.expression) == None:
+            return False
         if self.operateur == Operateur.EGALITE:
-            value = basedefaits.valeur_fait(self.expression) == self.value
+            value = value_fait == self.value
         elif self.operateur == Operateur.INEGALITE:
-            value = basedefaits.valeur_fait(self.expression) != self.value
+            value = value_fait != self.value
         elif self.operateur == Operateur.SUPERIORITE:
-            value = basedefaits.valeur_fait(self.expression) > self.value
+            value = value_fait > self.value
         elif self.operateur == Operateur.SUPERIORITEOUEGALITE:
-            value = basedefaits.valeur_fait(self.expression) >= self.value
+            value = value_fait >= self.value
         elif self.operateur == Operateur.INFERIORITE:
-            value = basedefaits.valeur_fait(self.expression) < self.value
+            value = value_fait < self.value
         elif self.operateur == Operateur.INFERIORITEOUEGALITE:
-            value = basedefaits.valeur_fait(self.expression) <= self.value
+            value = value_fait <= self.value
         return value
 
     def ajouter(self, basedefaits):
@@ -52,41 +55,53 @@ class Proposition:
 
 class Regle:
 
-    def __init__(self, conclusion):
-        if not isinstance(conclusion, Proposition):
-            raise TypeError("conclusion doit être un Proposition")
-        self.premisse = []
-        self.conclusion = conclusion
+    def __init__(self):
+        self.premisses = []
+        self.conclusions = []
         self.est_desactive = False
 
     def __str__(self):
         chaine = ""
         premiere = True
-        for proposition in self.premisse:
+        for proposition in self.premisses:
             if premiere:
                 chaine += "SI    " + str(proposition) + "\n"
                 premiere = False
             else:
                 chaine += "ET    " + str(proposition) + "\n"
-        chaine += "ALORS " + str(self.conclusion) + "\n"
+        premiere = True
+        chaine += "ALORS "
+        for proposition in self.conclusions:
+            if premiere:
+                chaine += str(proposition)
+                premiere = False
+            else:
+                chaine += " ET " + str(proposition)
+        chaine += "\n"
         return chaine
 
     def ajouter_premisse(self, proposition):
         if not isinstance(proposition, Proposition):
             raise TypeError("proposition doit être une proposition")
-        self.premisse.append(proposition)
+        self.premisses.append(proposition)
+
+    def ajouter_conclusion(self, proposition):
+        if not isinstance(proposition, Proposition):
+            raise TypeError("proposition doit être une proposition")
+        self.conclusions.append(proposition)
 
     def applicable(self, basedefaits):
         applicable = True
         if self.est_desactive:
             applicable = False
-        for proposition in self.premisse:
+        for proposition in self.premisses:
             applicable = applicable and proposition.valeur(basedefaits)
         return applicable
     
     def appliquer(self, basedefaits):
         if not self.est_desactive:
-            self.conclusion.ajouter(basedefaits)
+            for proposition in self.conclusions:
+                proposition.ajouter(basedefaits)
     
     def desactiver(self):
         self.est_desactive = True
@@ -105,7 +120,7 @@ class BaseDeRegles:
         chaine += "Base de rêgle\n"
         for regle in self.regles:
             chaine += str(regle)
-        chaine += "=============\n"
+        chaine += "============="
         return chaine
 
     def ajouter_regle(self, regle):

@@ -18,12 +18,12 @@ class BaseDeFaits:
         chaine += "Base de Faits\n"
         for fait in self.faits:
             chaine += str(fait) + "\n"
-        chaine += "=============\n"
+        chaine += "============="
         return chaine
 
     def contient(self, fait_a_verifier):
         for fait in self.faits:
-            if fait == fait_a_verifier:
+            if fait.nom == fait_a_verifier.nom and fait.valeur == fait_a_verifier.valeur:
                 return True
         return False
 
@@ -34,6 +34,8 @@ class BaseDeFaits:
                     fait.valeur = fait_a_ajouter.valeur
                     return
                 elif fait.valeur == fait_a_ajouter.valeur:
+                    return
+                else:
                     raise Exception("Base de Faits inconsitante")
         self.faits.append(fait_a_ajouter)
 
