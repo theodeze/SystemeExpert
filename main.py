@@ -9,19 +9,23 @@ from lecteur import *
 #    un moteur d'inférence.
 
 
-basetdefait = BaseDeFaits()
-#basetdefait.ajouter_fait(Fait("Taille de Thomas", 175))
-#basetdefait.ajouter_fait(Fait("Taille de Gidéone", 169))
-#basetdefait.ajouter_fait(Fait("Grand", True))
-print(basetdefait)
-
+basedefaits = BaseDeFaits()
 basederegles = BaseDeRegles()
+lecteur = Lecteur()
+lecteur.lire_fichier(basedefaits,basederegles)
+#basedefaits.ajouter_fait(Fait("Taille de Thomas", 175))
+#basedefaits.ajouter_fait(Fait("Taille de Gidéone", 169))
+#basedefaits.ajouter_fait(Fait("Grand", True))
+print(basedefaits)
+
 regle1 = Regle(Proposition("Grand", Operateur.AFFECTATION, True))
 regle1.ajouter_premisse(Proposition("Taille de Thomas", Operateur.SUPERIORITE, 150))
+
 basederegles.ajouter_regle(regle1)
 print(basederegles)
 
-lecteur = Lecteur()
-lecteur.lire_fichier(basetdefait,basederegles)
+regle = basederegles.selection(basedefaits)
+regle.appliquer(basedefaits)
+print(basedefaits)
 
-print(basetdefait)
+

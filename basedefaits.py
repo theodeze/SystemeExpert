@@ -33,7 +33,7 @@ class BaseDeFaits:
                 if fait.valeur == None:
                     fait.valeur = fait_a_ajouter.valeur
                     return
-                elif fait.valeur != fait_a_ajouter.valuer:
+                elif fait.valeur == fait_a_ajouter.valeur:
                     raise Exception("Base de Faits inconsitante")
         self.faits.append(fait_a_ajouter)
 

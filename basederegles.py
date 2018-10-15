@@ -47,12 +47,14 @@ class Proposition:
 
     def ajouter(self, basedefaits):
         if self.operateur == Operateur.AFFECTATION:
-            basedefaits.ajouter_fait(self.expression, self.value)
+            basedefaits.ajouter_fait(Fait(self.expression, self.value))
 
 
 class Regle:
 
     def __init__(self, conclusion):
+        if not isinstance(conclusion, Proposition):
+            raise TypeError("conclusion doit être un Proposition")
         self.premisse = []
         self.conclusion = conclusion
         self.est_desactive = False
@@ -76,14 +78,14 @@ class Regle:
 
     def applicable(self, basedefaits):
         applicable = True
-        if self.desactiver:
+        if self.est_desactive:
             applicable = False
         for proposition in self.premisse:
             applicable = applicable and proposition.valeur(basedefaits)
         return applicable
     
     def appliquer(self, basedefaits):
-        if self.conclusion.applicable(basedefaits) and not self.est_desactive:
+        if not self.est_desactive:
             self.conclusion.ajouter(basedefaits)
     
     def desactiver(self):
@@ -112,9 +114,9 @@ class BaseDeRegles:
         self.regles.append(regle)
 
     def applicable(self, basedefaits):
-        applicable = True
+        applicable = False
         for regle in self.regles:
-            applicable = applicable and regle.applicable(basedefaits)
+            applicable = applicable or regle.applicable(basedefaits)
         return applicable            
     
     def selection(self, basedefaits):
