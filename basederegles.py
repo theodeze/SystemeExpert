@@ -1,9 +1,11 @@
+# coding=utf8
 from enum import Enum, unique
 
 from basedefaits import *
 
 @unique
 class Operateur(Enum):
+    
     AFFECTATION = "="
     EGALITE = "=="
     INEGALITE = "!="
@@ -56,15 +58,16 @@ class Regle:
         self.est_desactive = False
 
     def __str__(self):
-        str = ""
+        chaine = ""
         premiere = True
         for proposition in self.premisse:
             if premiere:
-                str += "SI    " + proposition + "\n"
+                chaine += "SI    " + str(proposition) + "\n"
                 premiere = False
             else:
-                str += "ET    " + proposition + "\n"
-        str += "ALORS " + self.conclusion + "\n"
+                chaine += "ET    " + str(proposition) + "\n"
+        chaine += "ALORS " + str(self.conclusion) + "\n"
+        return chaine
 
     def ajouter_premisse(self, proposition):
         if not isinstance(proposition, Proposition):
@@ -90,18 +93,18 @@ class Regle:
         self.est_desactive = False
 
 
-class BaseDeRegle: 
+class BaseDeRegles: 
 
     def __init__(self):
         self.regles = []
     
     def __str__(self):
-        str = "=============\n"
-        str += "Base de rêgle\n"
+        chaine = "============= "
+        chaine += "Base de rêgle\n"
         for regle in self.regles:
-            str += regle
-        str += "=============\n"
-        return str
+            chaine += str(regle)
+        chaine += "=============\n"
+        return chaine
 
     def ajouter_regle(self, regle):
         if not isinstance(regle, Regle):

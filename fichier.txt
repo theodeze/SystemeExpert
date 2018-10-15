@@ -1,0 +1,4 @@
+2 1
+Taille de Thomas=175
+Taille de Gidéon=169
+Grand:=Taille>170

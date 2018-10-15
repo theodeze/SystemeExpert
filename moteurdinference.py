@@ -1,3 +1,5 @@
+# coding=utf8
+
 from basedefaits import BaseDeFaits, Fait
 from basederegles import BaseDeRegle
 

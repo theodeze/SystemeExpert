@@ -5,7 +5,7 @@ class Fait:
         self.valeur = valeur
 
     def __str__(self):
-        return"{}: {}\n".format(self.nom, self.valeur)
+        return "{} = {}".format(self.nom, self.valeur)
 
 
 class BaseDeFaits:
@@ -14,12 +14,12 @@ class BaseDeFaits:
         self.faits = []
 
     def __str__(self):
-        str = "=============\n"
-        str += "Base de Faits\n"
+        chaine = "============= "
+        chaine += "Base de Faits\n"
         for fait in self.faits:
-            str + fait + "\n"
-        str += "=============\n"
-        return str
+            chaine += str(fait) + "\n"
+        chaine += "=============\n"
+        return chaine
 
     def contient(self, fait_a_verifier):
         for fait in self.faits:
@@ -33,7 +33,7 @@ class BaseDeFaits:
                 if fait.valeur == None:
                     fait.valeur = fait_a_ajouter.valeur
                     return
-                else:
+                elif fait.valeur != fait_a_ajouter.valuer:
                     raise Exception("Base de Faits inconsitante")
         self.faits.append(fait_a_ajouter)
 

@@ -1,28 +1,27 @@
 
-from systemeexpert.basedefaits import *
-from systemeexpert.basederegles import *
-from systemeexpert.moteurdinference import *
+from basedefaits import *
+from basederegles import *
+from lecteur import *
+# from moteurdinference import *
 
 #    une base de faits
 #    une base de règles
 #    un moteur d'inférence.
 
-class regle:
 
-    def __init__(self):
-        self.premisse = []
-        self.conclusion = 5
+basetdefait = BaseDeFaits()
+#basetdefait.ajouter_fait(Fait("Taille de Thomas", 175))
+#basetdefait.ajouter_fait(Fait("Taille de Gidéone", 169))
+#basetdefait.ajouter_fait(Fait("Grand", True))
+print(basetdefait)
 
+basederegles = BaseDeRegles()
+regle1 = Regle(Proposition("Grand", Operateur.AFFECTATION, True))
+regle1.ajouter_premisse(Proposition("Taille de Thomas", Operateur.SUPERIORITE, 150))
+basederegles.ajouter_regle(regle1)
+print(basederegles)
 
-class baseDeRegles:
+lecteur = Lecteur()
+lecteur.lire_fichier(basetdefait,basederegles)
 
-    def __init__(self):
-        self.regles = []
-    
-
-
-base_test = BaseDeFaits()
-base_test.ajouter_fait("Grand", True)
-print(base_test)
-base_test.ajouter_fait("Taille", 108)
-print(base_test)
+print(basetdefait)
