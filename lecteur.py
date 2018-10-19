@@ -9,53 +9,52 @@ class Lecteur:
 
     def lire_fichier(self, basedefaits, basederegles):
         with open(self.nom_fichier) as fichier:
-            l = 0
-            for lignes in fichier:
+            for ligne in fichier:
 
-                if ":=" in lignes:
-                    string = lignes.split("\n")[0]
+                if ":=" in ligne:
+                    string = ligne.split("\n")[0]
                     conclusions = self.decoupageBaseRegles(string)[0]
                     premises = self.decoupageBaseRegles(string)[1]
                     regle = Regle()
                     for conclusion in conclusions.split("&"):
-                        regle.ajouter_conclusion(Proposition(conclusion, Operateur.AFFECTATION, True))
+                        regle.ajouter_conclusion(Proposition(conclusion.split("=")[0], Operateur.AFFECTATION, self.analyse_chaine(conclusion.split("=")[1])))
                     for premise in premises.split("&"):
                         if "==" in premise:
-                            regle.ajouter_premisse(Proposition(premise.split("==")[0], Operateur.EGALITE, self.analyseType(premise.split("==")[1])))
+                            regle.ajouter_premisse(Proposition(premise.split("==")[0], Operateur.EGALITE, self.analyse_chaine(premise.split("==")[1])))
                         elif "!=" in premise:
-                            regle.ajouter_premisse(Proposition(premise.split("!=")[0], Operateur.INEGALITE, self.analyseType(premise.split("!=")[1])))
+                            regle.ajouter_premisse(Proposition(premise.split("!=")[0], Operateur.INEGALITE, self.analyse_chaine(premise.split("!=")[1])))
                         elif "<=" in premise:
-                            regle.ajouter_premisse(Proposition(premise.split("<=")[0], Operateur.INFERIORITEOUEGALITE, self.analyseType(premise.split("<=")[1])))
+                            regle.ajouter_premisse(Proposition(premise.split("<=")[0], Operateur.INFERIORITEOUEGALITE, self.analyse_chaine(premise.split("<=")[1])))
                         elif "<" in premise:
-                            regle.ajouter_premisse(Proposition(premise.split("<")[0], Operateur.INFERIORITE, self.analyseType(premise.split("<")[1])))
+                            regle.ajouter_premisse(Proposition(premise.split("<")[0], Operateur.INFERIORITE, self.analyse_chaine(premise.split("<")[1])))
                         elif ">=" in premise:
-                            regle.ajouter_premisse(Proposition(premise.split(">=")[0], Operateur.SUPERIORITEOUEGALITE, self.analyseType(premise.split(">=")[1])))
+                            regle.ajouter_premisse(Proposition(premise.split(">=")[0], Operateur.SUPERIORITEOUEGALITE, self.analyse_chaine(premise.split(">=")[1])))
                         elif ">" in premise:
-                            regle.ajouter_premisse(Proposition(premise.split(">")[0], Operateur.SUPERIORITE, self.analyseType(premise.split(">")[1])))
+                            regle.ajouter_premisse(Proposition(premise.split(">")[0], Operateur.SUPERIORITE, self.analyse_chaine(premise.split(">")[1])))
                     basederegles.ajouter_regle(regle) 
 
-                else:
-                    string = lignes.split("\n")[0]
-                    basedefaits.ajouter_fait(Fait(self.decoupageBaseFaits(string)[0],self.analyseType(self.decoupageBaseFaits(string)[1])))
+                elif "=" in ligne:
+                    string = ligne.split("\n")[0]
+                    basedefaits.ajouter_fait(Fait(self.decoupageBaseFaits(string)[0],self.analyse_chaine(self.decoupageBaseFaits(string)[1])))
 
-                l +=1
+                elif ligne != "\n" and ligne[0] != "#":
+                    print("WARNING: ligne non reconnus\n" + ligne.split("\n")[0])
+
         fichier.close()
-
-    def remplirTableau(self, tableau, string):
-        return tableau.append(string)
         
-    def analyseType(self, valeur):
-        if valeur.isdigit():
-            return int(valeur)
-        elif valeur=="True":
+    def analyse_chaine(self, chaine):
+        chaine = chaine.strip();
+        if chaine.isdigit():
+            return float(chaine)
+        elif chaine == "True" or chaine == "Vrais":
             return True
-        elif valeur=="False":
+        elif chaine=="False" or chaine == "Faux":
             return False
-        else :
-            return valeur
+        else:
+            return chaine
 
-    def decoupageBaseFaits(self, string):
-        return string.split("=")
+    def decoupageBaseFaits(self, chaine):
+        return chaine.split("=")
 
-    def decoupageBaseRegles(self, string):
-        return string.split(":=")
+    def decoupageBaseRegles(self, chaine):
+        return chaine.split(":=")
