@@ -81,7 +81,7 @@ class Regle:
     def appliquer(self, basedefaits):
         if not self.est_desactive:
             for fait in self.conclusions:
-                basedefaits.ajouter(fait)
+                basedefaits.ajouter_fait(fait)
     
     def desactiver(self):
         self.est_desactive = True

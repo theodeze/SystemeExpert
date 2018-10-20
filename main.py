@@ -44,7 +44,7 @@ print(basederegles)
 
 moteur = MoteurDInferance(True)
 
-#moteur.chainage_avant(basedefaits,basederegles,Fait("Grand",True))
-print(moteur.chainage_arriere(basedefaits,basederegles,Fait("H",True),None))
+moteur.chainage_avant(basedefaits,basederegles,Fait("H",True))
+#print(moteur.chainage_arriere(basedefaits,basederegles,Fait("H",True),None))
 
 print(basedefaits)
