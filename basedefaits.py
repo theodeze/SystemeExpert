@@ -1,12 +1,4 @@
-class Fait:
-
-    def __init__(self, nom, valeur):
-        self.nom = nom
-        self.valeur = valeur
-
-    def __str__(self):
-        return "{} = {}".format(self.nom, self.valeur)
-
+from base import Proposition, Operateur, Fait
 
 class BaseDeFaits:
     
@@ -22,22 +14,45 @@ class BaseDeFaits:
         return chaine
 
     def contient(self, fait_a_verifier):
-        for fait in self.faits:
-            if fait.nom == fait_a_verifier.nom and fait.valeur == fait_a_verifier.valeur:
-                return True
+        if isinstance(fait_a_verifier, Fait):
+            for fait in self.faits:
+                if Fait.egale(fait, fait_a_verifier):
+                    return True
+        if isinstance(fait_a_verifier, Proposition):
+            for fait in self.faits:
+                if fait_a_verifier.operateur == Operateur.EGALITE:
+                    if Fait.egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
+                        return True
+                elif fait_a_verifier.operateur == Operateur.INEGALITE:
+                    if Fait.inegale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
+                        return True
+                elif fait_a_verifier.operateur == Operateur.SUPERIORITE:
+                    if Fait.inferieur(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
+                        return True
+                elif fait_a_verifier.operateur == Operateur.SUPERIORITEOUEGALITE:
+                    if Fait.inferieur_egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
+                        return True
+                elif fait_a_verifier.operateur == Operateur.INFERIORITE:
+                    if Fait.superieur(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
+                        return True
+                elif fait_a_verifier.operateur == Operateur.INFERIORITEOUEGALITE:
+                    if Fait.superieur_eagle(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
+                        return True
+
         return False
 
     def ajouter_fait(self, fait_a_ajouter):
-        for fait in self.faits:
-            if fait.nom == fait_a_ajouter.nom:
-                if fait.valeur == None:
-                    fait.valeur = fait_a_ajouter.valeur
-                    return
-                elif fait.valeur == fait_a_ajouter.valeur:
-                    return
-                else:
-                    raise Exception("Base de Faits inconsitante")
-        self.faits.append(fait_a_ajouter)
+        if isinstance(fait_a_ajouter, Fait):
+            for fait in self.faits:
+                if fait.nom == fait_a_ajouter.nom:
+                    if fait.valeur == None:
+                        fait.valeur = fait_a_ajouter.valeur
+                        return
+                    elif fait.valeur == fait_a_ajouter.valeur:
+                        return
+                    else:
+                        raise Exception("Base de Faits inconsitante")
+            self.faits.append(fait_a_ajouter)
 
     def valeur_fait(self, nom):
         for fait in self.faits:

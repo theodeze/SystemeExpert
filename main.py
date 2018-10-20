@@ -2,10 +2,10 @@ import os
 import os.path
 import sys
 
-from basedefaits import *
+from basedefaits import BaseDeFaits, Fait
 from basederegles import BaseDeRegles
 from lecteur import Lecteur
-from moteurdinference import *
+from moteurdinference import MoteurDInferance
 
 # from moteurdinference import *
 
@@ -44,6 +44,7 @@ print(basederegles)
 
 moteur = MoteurDInferance(True)
 
-moteur.chainage_avant(basedefaits,basederegles,Fait("Grand",True))
+#moteur.chainage_avant(basedefaits,basederegles,Fait("Grand",True))
+print(moteur.chainage_arriere(basedefaits,basederegles,Fait("H",True),None))
 
 print(basedefaits)

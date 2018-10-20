@@ -1,57 +1,5 @@
-# coding=utf8
-from enum import Enum, unique
-
-from basedefaits import BaseDeFaits, Fait
-
-@unique
-class Operateur(Enum):
-    
-    AFFECTATION = "="
-    EGALITE = "=="
-    INEGALITE = "!="
-    SUPERIORITE = ">"
-    SUPERIORITEOUEGALITE = ">="
-    INFERIORITE = "<"
-    INFERIORITEOUEGALITE = "<="
-
-
-class Proposition:
-    
-    def __init__(self, expression, operateur, value):
-        if not isinstance(expression, str):
-            raise TypeError("expression doit être une string")
-        if not isinstance(operateur, Operateur):
-            raise TypeError("operateur doit être un operateur")
-        self.expression = expression
-        self.operateur = operateur
-        self.value = value
-
-    def __str__(self):
-        return "{} {} {}".format(self.expression, self.operateur.value, self.value)
-
-    def valeur(self, basedefaits):
-        value = False
-        value_fait = basedefaits.valeur_fait(self.expression)
-        if basedefaits.valeur_fait(self.expression) == None:
-            return False
-        if self.operateur == Operateur.EGALITE:
-            value = value_fait == self.value
-        elif self.operateur == Operateur.INEGALITE:
-            value = value_fait != self.value
-        elif self.operateur == Operateur.SUPERIORITE:
-            value = value_fait > self.value
-        elif self.operateur == Operateur.SUPERIORITEOUEGALITE:
-            value = value_fait >= self.value
-        elif self.operateur == Operateur.INFERIORITE:
-            value = value_fait < self.value
-        elif self.operateur == Operateur.INFERIORITEOUEGALITE:
-            value = value_fait <= self.value
-        return value
-
-    def ajouter(self, basedefaits):
-        if self.operateur == Operateur.AFFECTATION:
-            basedefaits.ajouter_fait(Fait(self.expression, self.value))
-
+from base import Fait, Proposition, Operateur
+from basedefaits import BaseDeFaits
 
 class Regle:
 
@@ -65,19 +13,18 @@ class Regle:
         premiere = True
         for proposition in self.premisses:
             if premiere:
-                chaine += "SI    " + str(proposition) + "\n"
+                chaine += str(proposition)
                 premiere = False
             else:
-                chaine += "ET    " + str(proposition) + "\n"
+                chaine += " ∧ " + str(proposition)
         premiere = True
-        chaine += "ALORS "
+        chaine += " → "
         for proposition in self.conclusions:
             if premiere:
                 chaine += str(proposition)
                 premiere = False
             else:
-                chaine += " ET " + str(proposition)
-        chaine += "\n"
+                chaine += " ∧ " + str(proposition)
         return chaine
 
     def ajouter_premisse(self, proposition):
@@ -85,10 +32,43 @@ class Regle:
             raise TypeError("proposition doit être une proposition")
         self.premisses.append(proposition)
 
-    def ajouter_conclusion(self, proposition):
-        if not isinstance(proposition, Proposition):
-            raise TypeError("proposition doit être une proposition")
-        self.conclusions.append(proposition)
+    def liste_premisses(self):
+        return self.premisses
+
+    def ajouter_conclusion(self, fait):
+        if not isinstance(fait, Fait):
+            raise TypeError("fait doit être un Fait")
+        self.conclusions.append(fait)
+
+    def liste_conclusions(self):
+        return self.conclusions
+
+    def contient_conclusion(self, fait):
+        if isinstance(fait, Fait):
+            for conclusion in self.conclusions:
+                if Fait.egale(conclusion, fait):
+                    return True
+        if isinstance(fait, Proposition):
+            for conclusion in self.conclusions:
+                if fait.operateur == Operateur.EGALITE:
+                    if Fait.egale(Fait(fait.expression, fait.value), conclusion):
+                        return True
+                elif fait.operateur == Operateur.INEGALITE:
+                    if Fait.inegale(Fait(fait.expression, fait.value), conclusion):
+                        return True
+                elif fait.operateur == Operateur.SUPERIORITE:
+                    if Fait.inferieur(Fait(fait.expression, fait.value), conclusion):
+                        return True
+                elif fait.operateur == Operateur.SUPERIORITEOUEGALITE:
+                    if Fait.inferieur_egale(Fait(fait.expression, fait.value), conclusion):
+                        return True
+                elif fait.operateur == Operateur.INFERIORITE:
+                    if Fait.superieur(Fait(fait.expression, fait.value), conclusion):
+                        return True
+                elif fait.operateur == Operateur.INFERIORITEOUEGALITE:
+                    if Fait.superieur_eagle(Fait(fait.expression, fait.value), conclusion):
+                        return True
+        return False
 
     def applicable(self, basedefaits):
         applicable = True
@@ -100,8 +80,8 @@ class Regle:
     
     def appliquer(self, basedefaits):
         if not self.est_desactive:
-            for proposition in self.conclusions:
-                proposition.ajouter(basedefaits)
+            for fait in self.conclusions:
+                basedefaits.ajouter(fait)
     
     def desactiver(self):
         self.est_desactive = True
@@ -119,7 +99,7 @@ class BaseDeRegles:
         chaine = "============= "
         chaine += "Base de rêgle\n"
         for regle in self.regles:
-            chaine += str(regle)
+            chaine += str(regle) + "\n"
         chaine += "============="
         return chaine
 
@@ -139,6 +119,13 @@ class BaseDeRegles:
             if regle.applicable(basedefaits):
                 return regle
         return None
+
+    def list_regles_ayant_conclusion(self, conclusion):
+        ensemble_regle = []
+        for regle in self.regles:
+            if regle.contient_conclusion(conclusion):
+                ensemble_regle.append(regle)
+        return ensemble_regle
 
     def activer_tous(self):
         for regle in self.regles:

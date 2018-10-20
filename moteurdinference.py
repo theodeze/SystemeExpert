@@ -1,7 +1,7 @@
-# coding=utf8
-
-from basedefaits import BaseDeFaits, Fait
+from base import Fait, Proposition, Operateur
+from basedefaits import BaseDeFaits 
 from basederegles import BaseDeRegles
+from pptree import *
 
 class MoteurDInferance:
 
@@ -32,6 +32,47 @@ class MoteurDInferance:
             print("Fait non établie")
         print("=============")
         return basedefaits.contient(fait_a_etablir)
-        
-    def chainage_arriere(self, basedefaits, basederegle, fait_a_etablir):
-        print("============= Résultat chainage arriere")
+
+    def chainage_arriere(self, basedefaits, basederegles, fait_a_etablir, noeud_parent):
+        if basedefaits.contient(fait_a_etablir):
+            Node(str(fait_a_etablir) + " dans BF", noeud_parent)
+            return True
+        if noeud_parent == None:
+            noeud = Node(str(fait_a_etablir))
+        else:
+            noeud = Node(str(fait_a_etablir), noeud_parent)
+        ER = basederegles.list_regles_ayant_conclusion(fait_a_etablir)
+        R = None
+        valide = False
+        while valide != True and ER != []:
+            valide = True
+            R = ER[0]
+            noeud2 = Node(str(R), noeud)
+            ER.pop(0)
+            for Fr in R.liste_premisses():
+                valide = valide and self.chainage_arriere(basedefaits, basederegles, Fr, noeud2)
+        if valide:
+            basedefaits.ajouter_fait(fait_a_etablir)
+            for conclusion in R.liste_conclusions():
+                basedefaits.ajouter_fait(conclusion)
+        elif noeud_parent != None:
+            Node(" echec", noeud)
+        if noeud_parent == None:
+            print("============= Résultat chainage arriere")
+            print_tree(noeud)
+        return valide
+
+#DEBUT
+#SI (F∈ BF) ALORS ChaînageArriere  OK
+#    SINON construire ER ensemble de règles R, telle que F ∈ conclusion(R)
+#    FAIRE 
+#        valide  VRAI
+#        R  premier element de ER
+#        ER  ER – {R}
+#        POURTOUT Fr ∈ premisse(R)
+#            valide  valide ET ChaînageArriere (BF, BR, Fr)
+#        FIN POUR 
+#    JUSQU’À (valide OU ER ≠∅ )
+#SI valide ALORS BF = BF ∪ {F}
+#ChaînageArriere  valide
+#FIN
