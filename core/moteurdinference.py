@@ -56,12 +56,21 @@ class MoteurDInferance:
         R = None
         valide = False
         while not valide and ER != []:
-            valide = True
+            valide = True # plus besoin
             R = ER[0]
             noeud2 = Node(str(R), noeud)
             ER.pop(0)
+            index = -1
             for Fr in R.liste_premisses():
-                valide = valide and self.chainage_arriere(basedefaits, basederegles, Fr, noeud2, faits_precedent)
+                if index == -1:
+                    valide = self.chainage_arriere(basedefaits, basederegles, Fr, noeud2, faits_precedent)
+                    index += 1
+                elif R.operateurs[index] == Operateur.ET:
+                    valide = valide and self.chainage_arriere(basedefaits, basederegles, Fr, noeud2, faits_precedent)
+                    index +=1
+                elif R.operateurs[index] == Operateur.OU:
+                    valide = valide or self.chainage_arriere(basedefaits, basederegles, Fr, noeud2, faits_precedent)
+                    index +=1
         if valide:
             basedefaits.ajouter_fait(fait_a_etablir)
             for conclusion in R.liste_conclusions():
