@@ -1,0 +1,5 @@
+A = True
+B = True
+C = True := A == True & B == True
+D = True := A == True
+E = True & F = True := A == True & C == True

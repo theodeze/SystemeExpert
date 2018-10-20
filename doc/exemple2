@@ -1,0 +1,11 @@
+B = True
+C = True
+F = True := B == True & D == True & E == True
+A = True := G == True & D == True
+A = True := C == True & F == True
+X = True := B == True
+E = True := D == True
+H = True := X == True & A == True
+D = True := C == True
+A = True := X == True & C == True
+D = True := X == True & B == True

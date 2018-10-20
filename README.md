@@ -1,7 +1,7 @@
 # SystemeExpert
 
 ## A faire
-- Ajouter ou dans les expressions
+- Ne prend pas en compte les parathese 
 - Vérifier: Proteger le chainage arriere contre les bouclages
-- Gerer les espace nom de variable
+- Faire plus de test
 - et encore plus

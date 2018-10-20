@@ -1,10 +1,10 @@
 import os
 import os.path
 
-from basedefaits import BaseDeFaits, Fait
-from basederegles import BaseDeRegles
+from core.basedefaits import BaseDeFaits, Fait
+from core.basederegles import BaseDeRegles
+from core.moteurdinference import MoteurDInferance
 from lecteur import Lecteur
-from moteurdinference import MoteurDInferance
 
 def main():
     print("Nom fichier ?")
@@ -19,6 +19,8 @@ def main():
     lecteur = Lecteur(nom_fichier)
     lecteur.lire_fichier(basedefaits,basederegles)
 
+    print(basedefaits)
+    print(basederegles)
 
     print("Nom du fait recherché ?")
     nom_fait = input()

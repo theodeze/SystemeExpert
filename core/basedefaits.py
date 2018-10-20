@@ -1,4 +1,4 @@
-from base import Proposition, Operateur, Fait
+from .base import Proposition, Operateur, Fait
 
 class BaseDeFaits:
     
@@ -6,11 +6,10 @@ class BaseDeFaits:
         self.faits = []
 
     def __str__(self):
-        chaine = "============= "
-        chaine += "Base de Faits\n"
+        chaine =  "======== Base de Faits ========\n"
         for fait in self.faits:
             chaine += str(fait) + "\n"
-        chaine += "============="
+        chaine += "==============================="
         return chaine
 
     def contient(self, fait_a_verifier):
@@ -36,7 +35,7 @@ class BaseDeFaits:
                     if Fait.superieur(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
                         return True
                 elif fait_a_verifier.operateur == Operateur.INFERIORITEOUEGALITE:
-                    if Fait.superieur_eagle(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
+                    if Fait.superieur_egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
                         return True
 
         return False

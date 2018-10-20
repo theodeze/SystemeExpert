@@ -34,7 +34,7 @@ class Fait:
         return fait1.nom == fait2.nom and fait1.valeur < fait2.valeur
 
     @staticmethod
-    def superieur_eagle(fait1, fait2):
+    def superieur_egale(fait1, fait2):
         return fait1.nom == fait2.nom and fait1.valeur <= fait2.valeur
 
 
@@ -46,6 +46,8 @@ class Operateur(Enum):
     SUPERIORITEOUEGALITE = ">="
     INFERIORITE = "<"
     INFERIORITEOUEGALITE = "<="
+    ET = "∧"
+    OU = "∨"
 
 
 class Proposition:

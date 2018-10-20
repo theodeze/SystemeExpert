@@ -1,22 +1,25 @@
-from base import Fait, Proposition, Operateur
-from basedefaits import BaseDeFaits
+from .base import Fait, Proposition, Operateur
+from .basedefaits import BaseDeFaits
 
 class Regle:
 
     def __init__(self):
         self.premisses = []
         self.conclusions = []
+        self.operateurs = []
         self.est_desactive = False
 
     def __str__(self):
         chaine = ""
         premiere = True
+        index = 0
         for proposition in self.premisses:
             if premiere:
                 chaine += str(proposition)
                 premiere = False
             else:
-                chaine += " ∧ " + str(proposition)
+                chaine += " " + self.operateurs[index].value + " " + str(proposition)
+                index += 1
         premiere = True
         chaine += " → "
         for proposition in self.conclusions:
@@ -31,6 +34,11 @@ class Regle:
         if not isinstance(proposition, Proposition):
             raise TypeError("proposition doit être une proposition")
         self.premisses.append(proposition)
+
+    def ajouter_operateurs(self, operateur):
+        if not isinstance(operateur, Operateur):
+            raise TypeError("operateur doit être une Operateur")
+        self.operateurs.append(operateur)
 
     def liste_premisses(self):
         return self.premisses
@@ -66,16 +74,25 @@ class Regle:
                     if Fait.superieur(Fait(fait.expression, fait.value), conclusion):
                         return True
                 elif fait.operateur == Operateur.INFERIORITEOUEGALITE:
-                    if Fait.superieur_eagle(Fait(fait.expression, fait.value), conclusion):
+                    if Fait.superieur_egale(Fait(fait.expression, fait.value), conclusion):
                         return True
         return False
 
     def applicable(self, basedefaits):
-        applicable = True
         if self.est_desactive:
-            applicable = False
+            return False
+        applicable = True
+        index = -1
         for proposition in self.premisses:
-            applicable = applicable and proposition.valeur(basedefaits)
+            if index == -1:
+                applicable = proposition.valeur(basedefaits)
+                index +=1
+            elif self.operateurs[index] == Operateur.ET:
+                applicable = applicable and proposition.valeur(basedefaits)
+                index +=1
+            elif self.operateurs[index] == Operateur.OU:
+                applicable = applicable or proposition.valeur(basedefaits)
+                index +=1
         return applicable
     
     def appliquer(self, basedefaits):
@@ -96,11 +113,10 @@ class BaseDeRegles:
         self.regles = []
     
     def __str__(self):
-        chaine = "============= "
-        chaine += "Base de rêgle\n"
+        chaine =  "======== Base de Rêgle ========\n"
         for regle in self.regles:
             chaine += str(regle) + "\n"
-        chaine += "============="
+        chaine += "==============================="
         return chaine
 
     def ajouter_regle(self, regle):
