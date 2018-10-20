@@ -33,14 +33,23 @@ class MoteurDInferance:
         print("=============")
         return basedefaits.contient(fait_a_etablir)
 
-    def chainage_arriere(self, basedefaits, basederegles, fait_a_etablir, noeud_parent):
+    def chainage_arriere(self, basedefaits, basederegles, fait_a_etablir, noeud_parent, faits_precedent):
         if basedefaits.contient(fait_a_etablir):
             Node(str(fait_a_etablir) + " dans BF", noeud_parent)
             return True
         if noeud_parent == None:
             noeud = Node(str(fait_a_etablir))
+            faits_precedent = []
         else:
             noeud = Node(str(fait_a_etablir), noeud_parent)
+
+        if faits_precedent == None:
+            faits_precedent = []
+        elif fait_a_etablir in faits_precedent:
+            Node("Bouclage", noeud)
+            return False
+        faits_precedent.append(fait_a_etablir)
+
         ER = basederegles.list_regles_ayant_conclusion(fait_a_etablir)
         R = None
         valide = False
@@ -50,29 +59,14 @@ class MoteurDInferance:
             noeud2 = Node(str(R), noeud)
             ER.pop(0)
             for Fr in R.liste_premisses():
-                valide = valide and self.chainage_arriere(basedefaits, basederegles, Fr, noeud2)
+                valide = valide and self.chainage_arriere(basedefaits, basederegles, Fr, noeud2, faits_precedent)
         if valide:
             basedefaits.ajouter_fait(fait_a_etablir)
             for conclusion in R.liste_conclusions():
                 basedefaits.ajouter_fait(conclusion)
         elif noeud_parent != None:
-            Node(" echec", noeud)
+            Node("Echec", noeud)
         if noeud_parent == None:
             print("============= Résultat chainage arriere")
             print_tree(noeud)
         return valide
-
-#DEBUT
-#SI (F∈ BF) ALORS ChaînageArriere  OK
-#    SINON construire ER ensemble de règles R, telle que F ∈ conclusion(R)
-#    FAIRE 
-#        valide  VRAI
-#        R  premier element de ER
-#        ER  ER – {R}
-#        POURTOUT Fr ∈ premisse(R)
-#            valide  valide ET ChaînageArriere (BF, BR, Fr)
-#        FIN POUR 
-#    JUSQU’À (valide OU ER ≠∅ )
-#SI valide ALORS BF = BF ∪ {F}
-#ChaînageArriere  valide
-#FIN
