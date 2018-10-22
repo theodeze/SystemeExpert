@@ -25,16 +25,16 @@ class BaseDeFaits:
                 elif fait_a_verifier.operateur == Operateur.INEGALITE:
                     if Fait.inegale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
                         return True
-                elif fait_a_verifier.operateur == Operateur.SUPERIORITE:
+                elif fait_a_verifier.operateur == Operateur.INFERIORITE:
                     if Fait.inferieur(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
                         return True
-                elif fait_a_verifier.operateur == Operateur.SUPERIORITEOUEGALITE:
+                elif fait_a_verifier.operateur == Operateur.INFERIORITEOUEGALITE:
                     if Fait.inferieur_egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
                         return True
-                elif fait_a_verifier.operateur == Operateur.INFERIORITE:
+                elif fait_a_verifier.operateur == Operateur.SUPERIORITE:
                     if Fait.superieur(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
                         return True
-                elif fait_a_verifier.operateur == Operateur.INFERIORITEOUEGALITE:
+                elif fait_a_verifier.operateur == Operateur.SUPERIORITEOUEGALITE:
                     if Fait.superieur_egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
                         return True
 
