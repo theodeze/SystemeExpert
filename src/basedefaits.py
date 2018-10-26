@@ -24,26 +24,30 @@ class BaseDeFaits:
                 if Fait.egale(fait, fait_a_verifier):
                     return True
         if isinstance(fait_a_verifier, Proposition):
-            for fait in self.faits:
-                if fait_a_verifier.operateur == Operateur.EGALITE:
-                    if Fait.egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
-                        return True
-                elif fait_a_verifier.operateur == Operateur.INEGALITE:
-                    if Fait.inegale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
-                        return True
-                elif fait_a_verifier.operateur == Operateur.INFERIORITE:
-                    if Fait.inferieur(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
-                        return True
-                elif fait_a_verifier.operateur == Operateur.INFERIORITEOUEGALITE:
-                    if Fait.inferieur_egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
-                        return True
-                elif fait_a_verifier.operateur == Operateur.SUPERIORITE:
-                    if Fait.superieur(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
-                        return True
-                elif fait_a_verifier.operateur == Operateur.SUPERIORITEOUEGALITE:
-                    if Fait.superieur_egale(Fait(fait_a_verifier.expression, fait_a_verifier.value), fait):
-                        return True
-
+            proposition_a_verifier = fait_a_verifier
+            fait_a_verifier = proposition_a_verifier.en_fait(self)
+            if isinstance(fait_a_verifier, bool):
+                return fait_a_verifier
+            elif fait_a_verifier != None:
+                for fait in self.faits:
+                    if proposition_a_verifier.operateur == Operateur.EGALITE:
+                        if Fait.egale(fait_a_verifier, fait):
+                            return True
+                    elif proposition_a_verifier.operateur == Operateur.INEGALITE:
+                        if Fait.inegale(fait_a_verifier, fait):
+                            return True
+                    elif proposition_a_verifier.operateur == Operateur.INFERIORITE:
+                        if Fait.inferieur(fait_a_verifier, fait):
+                            return True
+                    elif proposition_a_verifier.operateur == Operateur.INFERIORITEOUEGALITE:
+                        if Fait.inferieur_egale(fait_a_verifier, fait):
+                            return True
+                    elif proposition_a_verifier.operateur == Operateur.SUPERIORITE:
+                        if Fait.superieur(fait_a_verifier, fait):
+                            return True
+                    elif proposition_a_verifier.operateur == Operateur.SUPERIORITEOUEGALITE:
+                        if Fait.superieur_egale(fait_a_verifier, fait):
+                            return True
         return False
 
     def ajouter_fait(self, fait_a_ajouter):
@@ -56,7 +60,7 @@ class BaseDeFaits:
                     elif fait.valeur == fait_a_ajouter.valeur:
                         return
                     else:
-                        raise Exception("Base de Faits inconsitante")
+                        raise Exception("ajout du fait imposible car le fait existe déjâ (inconsitante)")
             self.faits.append(fait_a_ajouter)
 
     def valeur_fait(self, nom):

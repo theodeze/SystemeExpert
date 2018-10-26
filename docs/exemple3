@@ -1,5 +1,7 @@
 A = 10
 B = 5
 C = True := B < 8
-D = True := A > 8
-F = True := C == True || D == True
+D = True := 8 < A
+E = True := A < B
+F = True := 5 < 10
+G = True := C == True & D == True & E == True & F == True 

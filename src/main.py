@@ -25,27 +25,27 @@ class Interface:
                 self.afficher_faits()
             elif cmd == "2":
                 self.afficher_regles()
-            elif cmd == "4":
-                self.ajouter_fait()
-            elif cmd == "5":
+            elif cmd == "3":
                 self.chainage_avant()
-            elif cmd == "6":
+            elif cmd == "4":
                 self.chainage_arriere()
             elif cmd == "aide" or cmd == "help":
                 self.aide()
             elif cmd != "quitter" and cmd != "exit" and cmd != "":
-                print("NameError: nom '{}' n'est pas défini ".format(cmd))
+                Lecteur.lire_ligne(cmd, self.basedefaits, self.basederegles)
     
     def aide(self):
         print("Liste des commandes :")
-        print("0 : lire un fichier")
-        print("1 : afficher la base de faits")
-        print("2 : afficher la base de regles")
-        print("4 : ajouter fait")
-        print("5 : chainage avant")
-        print("6 : chainage arriere")
-        print("aide : afficher l'aide")
-        print("quitter : quitter")
+        print("\t0 : lire un fichier")
+        print("\t1 : afficher la base de faits")
+        print("\t2 : afficher la base de regles")
+        print("\t3 : chainage avant")
+        print("\t4 : chainage arriere")
+        print("\taide : afficher l'aide")
+        print("\tquitter : quitter")
+        print("Exemple:")
+        print("\tA = Vrai : Ajout d'un fait")
+        print("\tA = Vrai := B == Vrai & C == Faux : Ajout d'une regle")
 
     def afficher_regles(self):
         print(self.basederegles)
@@ -59,9 +59,6 @@ class Interface:
         print("Valeur du fait ?", end=' ')
         valeur_fait = input()
         return Fait(nom_fait,Lecteur.analyse_chaine(valeur_fait))
-
-    def ajouter_fait(self):
-        self.basedefaits.ajouter_fait(self.demande_fait())
 
     def chainage_avant(self):
         self.moteur.chainage_avant(self.basedefaits,self.basederegles,self.demande_fait())

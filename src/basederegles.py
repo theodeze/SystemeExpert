@@ -21,7 +21,7 @@ class Regle:
                 chaine += " " + self.operateurs[index].value + " " + str(proposition)
                 index += 1
         premiere = True
-        chaine += " → "
+        chaine += " ⊢ "
         for proposition in self.conclusions:
             if premiere:
                 chaine += str(proposition)

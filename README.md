@@ -10,7 +10,7 @@ $ systemeexpert
 ## Utilisation
 
 ```Bash
-$ python run.py
+$ python run.py ou systemeexpert si installé
 ```
 
 ## Syntaxe du fichier de Base de connaissance
@@ -39,9 +39,3 @@ Des exemples de Base de connaissance ce trouve dans le dossier doc.
 - Ne prend pas en compte les parenthèses 
 - Faire plus de test
 - et encore plus
-
-
-lire un fichier
-ajouter un fait
-chainage avant
-chainage arriere
