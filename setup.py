@@ -14,7 +14,7 @@ setup(
     install_requires=['pptree'],
     entry_points={
         'console_scripts': [
-            'systemeexpert = core.main:main',
+            'systemeexpert = src.main:main',
         ],
     }
 )
