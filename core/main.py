@@ -1,10 +1,10 @@
 import os
 import os.path
 
-from core.basedefaits import BaseDeFaits, Fait
-from core.basederegles import BaseDeRegles
-from core.moteurdinference import MoteurDInferance
-from lecteur import Lecteur
+from .basedefaits import BaseDeFaits, Fait
+from .basederegles import BaseDeRegles
+from .moteurdinference import MoteurDInferance
+from .lecteur import Lecteur
 
 def main():
     print("Nom fichier ?")

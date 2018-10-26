@@ -3,7 +3,8 @@
 ## Utilisation
 
 ```Bash
-$ python3 ./main.py
+$ python setup.py install --user
+$ systemeexpert
 ```
 
 ## Syntaxe du fichier de Base de connaissance

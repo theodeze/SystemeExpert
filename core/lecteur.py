@@ -1,6 +1,6 @@
 import re
-from core.base import Fait, Proposition, Operateur
-from core.basederegles import Regle
+from .base import Fait, Proposition, Operateur
+from .basederegles import Regle
 
 class Lecteur:
 

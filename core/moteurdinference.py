@@ -1,7 +1,7 @@
 from .base import Fait, Proposition, Operateur
 from .basedefaits import BaseDeFaits 
 from .basederegles import BaseDeRegles
-from .pptree import *
+from pptree import *
 
 class MoteurDInferance:
 

@@ -12,6 +12,12 @@ class BaseDeFaits:
         chaine += "==============================="
         return chaine
 
+    def to_array(self):
+        array = []
+        for fait in self.faits:
+            array.append(str(fait))
+        return array
+
     def contient(self, fait_a_verifier):
         if isinstance(fait_a_verifier, Fait):
             for fait in self.faits:
