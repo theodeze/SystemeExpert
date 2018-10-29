@@ -1,5 +1,27 @@
 # Systeme Expert
 
+## Sujet
+
+### 1) Implémentation de différentes stratégies d'exploitation des règles:
+- [x] Chaînage avant
+- [x] Chaînage arriêre 
+
+### 2 Utilisation de différents critères de choix de la règle déclenchée dans l'ensemble des conflits (ie. Ensemble des règles déclenchable ou susceptible d'être choisies pour développer un but):
+- [ ] complexité d'évaluation des prémisses
+- [x] règles ayant le plus de prémisses à satisfaire
+- [ ] récence d'utilisation de la règle
+- [ ] règle comportant comme prémisses les faits déduits le plus récents
+
+### 3) Possibilité de fournir des explications:
+- [ ] à la demande de l'utilisateur
+- [ ] en cas de problème
+- [x] explication sous forme de trace
+- [x] explication sous forme de trace abrégées
+
+### 4) Gestion de la cohérence. Vous définirez des critères définissant la cohérence de la base de connaissance (définition d'un modèle de cohérence ou C-modèle) et les utiliserez pour contrôler la base de connsissance et le fonctionnement du système.
+
+
+
 ## Installation
 
 ```Bash
@@ -39,3 +61,6 @@ Des exemples de Base de connaissance ce trouve dans le dossier doc.
 - Ne prend pas en compte les parenthèses 
 - Faire plus de test
 - et encore plus
+
+- probleme opérateur exemple 4 < b
+- ajouter la posibilité de choisir méthode selection regle
