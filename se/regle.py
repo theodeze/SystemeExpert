@@ -109,6 +109,14 @@ class Regle:
                         return True
         return False
 
+    def nb_premisses_a_satisfaire(self, basedefaits):
+        nb_premisses = 0
+        for premisse in self.premisses:
+            if isinstance(premisse, Proposition):
+                if not premisse.valeur(basedefaits):
+                    nb_premisses += 1
+        return nb_premisses
+
     def appliquer(self, basedefaits):
         if not self.est_desactive:
             for fait in self.conclusions:

@@ -49,6 +49,22 @@ class BaseDeFaits:
                         return True
         return False
 
+    def modifier(self, n, fait_a_modifier):
+        if isinstance(fait_a_modifier, Fait):
+            index = 0
+            for fait in self.faits:
+                if index == n:
+                    fait.symbole = fait_a_modifier.symbole
+                    fait.valeur = fait_a_modifier.valeur
+                    return
+                index += 1
+
+    def existe(self, symbole):
+        for fait in self.faits:
+            if fait.symbole == symbole:
+                return True
+        return False
+
     def ajouter(self, fait_a_ajouter):
         if isinstance(fait_a_ajouter, Fait):
             for fait in self.faits:

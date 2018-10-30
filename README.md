@@ -6,8 +6,8 @@
 - [x] Chaînage avant
 - [x] Chaînage arriêre 
 
-### 2 Utilisation de différents critères de choix de la règle déclenchée dans l'ensemble des conflits (ie. Ensemble des règles déclenchable ou susceptible d'être choisies pour développer un but):
-- [ ] complexité d'évaluation des prémisses
+### 2) Utilisation de différents critères de choix de la règle déclenchée dans l'ensemble des conflits (ie. Ensemble des règles déclenchable ou susceptible d'être choisies pour développer un but):
+- [x] complexité d'évaluation des prémisses
 - [x] règles ayant le plus de prémisses à satisfaire
 - [ ] récence d'utilisation de la règle
 - [ ] règle comportant comme prémisses les faits déduits le plus récents
@@ -63,4 +63,3 @@ Des exemples de Base de connaissance ce trouve dans le dossier doc.
 - et encore plus
 
 - probleme opérateur exemple 4 < b
-- ajouter la posibilité de choisir méthode selection regle

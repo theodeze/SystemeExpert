@@ -14,7 +14,8 @@ setup(
     install_requires=['pptree'],
     entry_points={
         'console_scripts': [
-            'systemeexpert = src.main:main',
+            'se-cli = se:main_cli',
+            'se-gui = se:main_gui',
         ],
     }
 )

@@ -1,4 +1,4 @@
-from se import Fait, Proposition, Operateur, Regle, BaseDeFaits
+from se import Fait, Proposition, Operateur, Regle, BaseDeFaits, SelectionRegle
 
 class BaseDeRegles: 
 
@@ -31,10 +31,32 @@ class BaseDeRegles:
                 regles.append(regle)
         return regles          
     
-    def selection(self, basedefaits):
-        for regle in self.regles:
-            if regle.applicable(basedefaits):
-                return regle
+    def selection(self, basedefaits, selection_regle):
+        if selection_regle == SelectionRegle.PREMIERE:
+            for regle in self.regles:
+                if regle.applicable(basedefaits):
+                    return regle
+        elif selection_regle == SelectionRegle.COMPLEXE:
+            max_complexe = -1
+            R = None
+            for regle in self.regles:
+                if regle.applicable(basedefaits):
+                    nb_complexe = len(regle.premisses)
+                    if nb_complexe > max_complexe:
+                        R = regle
+                        max_complexe = nb_complexe
+            return R
+        elif selection_regle == SelectionRegle.PLUS:
+            max_complexe = -1
+            R = None
+            for regle in self.regles:
+                if regle.applicable(basedefaits):
+                    nb_premisses_satisfaire = len(regle.premisses)
+                    if nb_complexe > max_complexe:
+                        R = regle
+                        max_complexe = nb_complexe
+            return R
+            return None
         return None
 
     def list_regles_ayant_conclusion(self, conclusion, basedefaits):

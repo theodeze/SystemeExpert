@@ -1,3 +1,3 @@
-from se import main
+from se import main_gui
 
-main()
+main_gui()

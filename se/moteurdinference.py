@@ -1,16 +1,17 @@
-from se import Fait, Proposition, Operateur, BaseDeFaits, BaseDeRegles, Connecteur, Regle, Trace
+from se import Fait, Proposition, Operateur, BaseDeFaits, BaseDeRegles, Connecteur, Regle, Trace, SelectionRegle
 from pptree import *
 
 class MoteurDInferance:
 
     def __init__(self):
         self.trace = Trace.NON
+        self.selection_regle = SelectionRegle.PREMIERE
 
     def chainage_avant(self, basedefaits, basederegles, fait_a_etablir):
         iteration = 1
         valide = basedefaits.contient(fait_a_etablir)
         while not valide and basederegles.applicable(basedefaits):
-            regle = basederegles.selection(basedefaits)
+            regle = basederegles.selection(basedefaits, self.selection_regle)
             if self.trace == Trace.MIN:
                 print("===============================")
                 print("Iteration " + str(iteration) + " :")

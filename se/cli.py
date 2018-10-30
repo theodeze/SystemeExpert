@@ -1,6 +1,6 @@
 import os
 import sys
-from se import BaseDeFaits, Fait, AnalyseurSyntaxique, BaseDeRegles, MoteurDInferance, Trace
+from se import BaseDeFaits, Fait, AnalyseurSyntaxique, BaseDeRegles, MoteurDInferance, Trace, SelectionRegle
 
 class CLI:
 
@@ -16,48 +16,67 @@ class CLI:
             print("Tapez \"aide\" pour plus d'informations.")
             while cmd != "quitter" and cmd != "exit":
                 print(">>>", end=' ')
-                cmd = input()
-                if cmd.startswith("lire"):
-                    nom_fichier = cmd.lstrip("lire").strip()
-                    self.lire_fichier(nom_fichier)
-                elif cmd.startswith("reinitialise"):
-                    self.reinitialiser()
-                elif cmd.startswith("trace"):
-                    niveau = cmd.lstrip("trace").strip()
-                    if "non" in niveau:
-                        self.moteur.trace = Trace.NON
-                        print("Trace " + self.moteur.trace.value)
-                    elif "min" in niveau:
-                        self.moteur.trace = Trace.MIN
-                        print("Trace " + self.moteur.trace.value)
-                    elif "oui" in niveau:
-                        self.moteur.trace = Trace.OUI
-                        print("Trace " + self.moteur.trace.value)
-                    elif niveau == "":
-                        print("Trace " + self.moteur.trace.value)
-                    else:
-                        print("ALERTE: Niveau trace non reconnus, valeur possible { oui, min, non }")
-                elif cmd == "1":
-                    self.afficher_faits()
-                elif cmd == "2":
-                    self.afficher_regles()
-                elif cmd == "3":
-                    self.chainage_avant()
-                elif cmd == "4":
-                    self.chainage_arriere()
-                elif cmd == "aide" or cmd == "help":
-                    self.aide()
-                elif cmd != "quitter" and cmd != "exit" and cmd != "":
-                    AnalyseurSyntaxique.analyse_ligne(cmd, self.basedefaits, self.basederegles)
+                self.commande(input())
         except KeyboardInterrupt:
             sys.exit(0)
     
+    def commande(self, cmd):
+        if cmd.startswith("lire"):
+            nom_fichier = cmd.lstrip("lire").strip()
+            self.lire_fichier(nom_fichier)
+        elif cmd.startswith("reinitialise"):
+            self.reinitialiser()
+        elif cmd.startswith("trace"):
+            niveau = cmd.lstrip("trace").strip()
+            if "non" in niveau:
+                self.moteur.trace = Trace.NON
+                print("Trace " + self.moteur.trace.value)
+            elif "min" in niveau:
+                self.moteur.trace = Trace.MIN
+                print("Trace " + self.moteur.trace.value)
+            elif "oui" in niveau:
+                self.moteur.trace = Trace.OUI
+                print("Trace " + self.moteur.trace.value)
+            elif niveau == "":
+                print("Trace " + self.moteur.trace.value)
+            else:
+                print("ALERTE: Niveau trace non reconnus, valeur possible { oui, min, non }")
+        elif cmd.startswith("regle"):
+            niveau = cmd.lstrip("regle").strip()
+            if "plus" in niveau:
+                self.moteur.selection_regle = SelectionRegle.PLUS
+                print("Choix de règle par " + self.moteur.selection_regle.value)
+            elif "complexe" in niveau:
+                self.moteur.selection_regle = SelectionRegle.COMPLEXE
+                print("Choix de règle par " + self.moteur.selection_regle.value)
+            elif "premiere" in niveau:
+                self.moteur.selection_regle = SelectionRegle.PREMIERE
+                print("Choix de règle par " + self.moteur.selection_regle.value)
+            elif niveau == "":
+                print("Règle choisi par " + self.moteur.selection_regle.value)
+            else:
+                print("ALERTE: Type règle non reconnus, valeur possible { premiere, complexe, plus }")
+        elif cmd == "1":
+            self.afficher_faits()
+        elif cmd == "2":
+            self.afficher_regles()
+        elif cmd == "3":
+            self.chainage_avant()
+        elif cmd == "4":
+            self.chainage_arriere()
+        elif cmd == "aide" or cmd == "help":
+            self.aide()
+        elif cmd != "quitter" and cmd != "exit" and cmd != "":
+            AnalyseurSyntaxique.analyse_ligne(cmd, self.basedefaits, self.basederegles)
+
     def aide(self):
         print("Liste des commandes :")
         print("\tlire <Nom fichier> : lire un fichier")
         print("\treinitialise : reinitialiser la Base de connaissance")
         print("\ttrace : affiche le niveau de trace")
         print("\ttrace <Niveau> : fixe le niveau de trace { oui, min, non }")
+        print("\tregle : affiche le type de regle")
+        print("\tregle <Type> : fixe le type de regle { premiere, complexe, plus }")
         print("\t1 : afficher la base de faits")
         print("\t2 : afficher la base de regles")
         print("\t3 : chainage avant")
@@ -102,9 +121,9 @@ class CLI:
             print("Ajout de {} faits et {} rêgles".format(len(self.basedefaits.faits)-nfaits, len(self.basederegles.regles)-nregles))
 
 
-def main():
+def main_cli():
     cli = CLI()
     cli.menu()
 
 if __name__ == '__main__':
-    main()
+    main_cli()

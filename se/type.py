@@ -35,6 +35,7 @@ class SelectionRegle(Enum):
     COMPLEXE = "complexité d'évaluation des prémisses"
     PLUS = "règles ayant le plus de prémisses à satisfaire"
 
+
 class AnalyseurSimple:
 
     @staticmethod
