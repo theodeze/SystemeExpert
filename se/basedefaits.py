@@ -49,21 +49,34 @@ class BaseDeFaits:
                         return True
         return False
 
-    def modifier(self, n, fait_a_modifier):
+    def modifier(self, ligne, fait_a_modifier):
         if isinstance(fait_a_modifier, Fait):
+            if not self.peut_modifier(ligne, fait_a_modifier.symbole):
+                raise Exception("Le symbole est déja pris")
             index = 0
             for fait in self.faits:
-                if index == n:
+                if index == ligne:
                     fait.symbole = fait_a_modifier.symbole
                     fait.valeur = fait_a_modifier.valeur
                     return
                 index += 1
 
-    def existe(self, symbole):
+    def symbole(self, ligne):
+        index = 0
+        for fait in self.faits:
+            if index == ligne:
+                return fait.symbole
+            index += 1
+        return ""
+
+    def peut_modifier(self, ligne, symbole):
+        index = 0
         for fait in self.faits:
             if fait.symbole == symbole:
-                return True
-        return False
+                if ligne != index:
+                    return False
+            index += 1
+        return True
 
     def ajouter(self, fait_a_ajouter):
         if isinstance(fait_a_ajouter, Fait):
@@ -84,3 +97,9 @@ class BaseDeFaits:
                 return fait.valeur
         self.ajouter(Fait(symbole, None))
         return None
+
+    def pairs(self):
+        pairs = []
+        for fait in self.faits:
+            pairs.append(fait.pair())
+        return pairs

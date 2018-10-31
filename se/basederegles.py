@@ -12,6 +12,12 @@ class BaseDeRegles:
         chaine += "==============================="
         return chaine
 
+    def liste(self):
+        liste = []
+        for regle in self.regles:
+            liste.append(str(regle))
+        return liste
+
     def ajouter(self, regle):
         if not isinstance(regle, Regle):
             raise TypeError("regle doit être une regle")

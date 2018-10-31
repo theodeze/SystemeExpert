@@ -7,4 +7,5 @@ from .basedefaits import *
 from .basederegles import *
 from .moteurdinference import *
 from .cli import *
+from .guidialog import *
 from .gui import *

@@ -30,3 +30,6 @@ class Fait:
 
     def __le__(self, fait):
         return self.symbole == fait.symbole and self.valeur <= fait.valeur
+
+    def pair(self):
+        return (self.symbole, self.valeur)

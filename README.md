@@ -63,3 +63,6 @@ Des exemples de Base de connaissance ce trouve dans le dossier doc.
 - et encore plus
 
 - probleme opérateur exemple 4 < b
+- configuration
+- aide 
+- menu
