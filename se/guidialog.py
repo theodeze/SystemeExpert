@@ -1,3 +1,4 @@
+import os
 from se import CLI, AnalyseurSyntaxique, Fait, Trace, SelectionRegle
 from PySide2.QtCore import QObject, Signal, Slot, Qt
 from PySide2.QtWidgets import *
@@ -71,6 +72,16 @@ class Aide(QDialog):
     def __init__(self, parent = None):
         super(Aide, self).__init__(parent)
         self.setWindowTitle("Aide")
+        self.layout = QHBoxLayout()
+        self.tabs = QTabWidget()
+        self.msg_accueil = QLabel("Bienvenue dans l'aide")
+        self.msg_accueil.setAlignment(Qt.AlignCenter)
+        self.tabs.addTab(self.msg_accueil, "Accueil")
+        self.cli = QTextBrowser()
+        self.cli.setText(open(os.path.dirname(__file__) + "/res/aide_terminal.html", 'r').read())
+        self.tabs.addTab(self.cli, "Terminal")
+        self.layout.addWidget(self.tabs)
+        self.setLayout(self.layout)
 
 
 class APropos(QDialog):
@@ -79,14 +90,7 @@ class APropos(QDialog):
         super(APropos, self).__init__(parent)
         self.setWindowTitle("A propos")
         self.layout = QVBoxLayout()
-        self.texte = QLabel("<h1>Système Expert</h1>\
-                            <h2>Moteur d'inférence 0+</h2>\
-                            <h4>Développeur (s)</h4>\
-                            Théo Dézé (theo.deze@etud.univ-angers.fr) <br>\
-                            Charles Mallet (charles.mallet@etud.univ-angers.fr)\
-                            <h4>Lien (s)</h4>\
-                            <p><a href='https://github.com/theodeze/SystemeExpert'>Github</a></p>\
-                            ")
+        self.texte = QLabel(open(os.path.dirname(__file__) + "/res/apropos.html", 'r').read())
         self.texte.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.texte.setOpenExternalLinks(True)
         self.layout.addWidget(self.texte)

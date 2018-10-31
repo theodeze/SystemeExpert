@@ -56,8 +56,17 @@ class CLI:
                 print("Règle choisi par " + self.moteur.selection_regle.value)
             else:
                 print("ALERTE: Type règle non reconnus, valeur possible { premiere, complexe, plus }")
-        elif cmd == "1":
-            self.afficher_faits()
+        elif cmd.startswith("afficher"):
+            affiche = cmd.lstrip("afficher").strip()
+            if "faits" in affiche:
+                self.afficher_faits()
+            elif "regles" in affiche:
+                self.afficher_regles()
+            elif affiche == "":
+                self.afficher_faits()
+                self.afficher_regles()
+            else:
+                print("ALERTE: Type règle non reconnus, valeur possible { faits, regles }")
         elif cmd == "2":
             self.afficher_regles()
         elif cmd == "3":
@@ -71,7 +80,11 @@ class CLI:
 
     def aide(self):
         print("Liste des commandes :")
-        print("\tlire <Nom fichier> : lire un fichier")
+        print("\tlire nom_du_fichier.txt : Charge un fichier")
+        print("\ttrace [non|min|oui] : Modifie le type d'affichage lors du chainage")
+        print("\tregle [|regles] : Modifie le type de selection des rêgles")
+        print("\tafficher [faits|regles] : Affiche les faits et/ou les rêgles")
+        print("\taide : Affiche l'aide")
         print("\treinitialise : reinitialiser la Base de connaissance")
         print("\ttrace : affiche le niveau de trace")
         print("\ttrace <Niveau> : fixe le niveau de trace { oui, min, non }")

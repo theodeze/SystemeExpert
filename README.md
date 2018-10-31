@@ -58,11 +58,7 @@ D = True := A == False & B <= 50
 Des exemples de Base de connaissance ce trouve dans le dossier doc.
 
 ## A faire
-- Ne prend pas en compte les parenthèses 
+- probleme opérateur exemple (ex: 4 < b)
+- aide 
 - Faire plus de test
 - et encore plus
-
-- probleme opérateur exemple 4 < b
-- configuration
-- aide 
-- menu

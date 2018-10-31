@@ -7,11 +7,13 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='SystemeExpert',
-    version='0.1',
+    version='0.2',
     description='Systeme Expert 0+',
     url='https://github.com/theodeze/SystemeExpert',
     packages=find_packages(exclude=['docs']),
-    install_requires=['pptree'],
+    install_requires=['pptree','pyside2'],
+    include_package_data=True,
+    package_data={'res': ['*.svg','*.html']},
     entry_points={
         'console_scripts': [
             'se-cli = se:main_cli',

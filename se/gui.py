@@ -1,6 +1,6 @@
 
-import sys
-from se import CLI, AnalyseurSyntaxique, Fait, Trace, SelectionRegle, Aide, DemandeFait, Configuration, APropos
+import sys, os
+from se import CLI, AnalyseurSyntaxique, Fait, Trace, BaseDeFaits, BaseDeRegles, SelectionRegle, Aide, DemandeFait, Configuration, APropos
 from PySide2.QtCore import QObject, QStringListModel, Signal, Slot, Qt, QTranslator, QLocale, QLibraryInfo
 from PySide2.QtWidgets import *
 from PySide2.QtGui import QTextCursor, QIcon
@@ -38,6 +38,8 @@ class AffichageBaseDeConnaissance(QWidget):
     def mise_a_jour_basedefaits(self):
         self.desactiver_modification = True
         ligne = 0
+        self.affichage_basedefaits.clearContents()
+        self.affichage_basedefaits.setRowCount(len(self.cli.basedefaits.pairs()) + 1)
         for symbole, valeur in self.cli.basedefaits.pairs():
             self.affichage_basedefaits.setItem(ligne, 0, QTableWidgetItem(symbole))
             self.affichage_basedefaits.setItem(ligne, 1, QTableWidgetItem(str(valeur)))
@@ -77,8 +79,15 @@ class Dock(QDockWidget):
         self.affichage_base_de_connaissance = AffichageBaseDeConnaissance(cli)
         self.setWidget(self.affichage_base_de_connaissance)
 
+    def basculer(self):
+        if self.isHidden():
+            self.setHidden(False)
+        else:
+            self.setHidden(True)
+
 
 class Terminal(QWidget):
+    mise_a_jour = Signal()
 
     def __init__(self, cli, parent = None):
         super(Terminal, self).__init__(parent)
@@ -107,8 +116,10 @@ class Terminal(QWidget):
         self.affichage.ensureCursorVisible()
 
     def envoyer_commande(self):
+        print(">>> " + self.commande.text())
         self.cli.commande(self.commande.text())
         self.commande.clear()
+        self.mise_a_jour.emit()
 
 
 class BarreCommande(QToolBar):
@@ -119,15 +130,21 @@ class BarreCommande(QToolBar):
         self.cli = cli
         self.setWindowTitle("Barre de commande")
         self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon	)
-        self.addAction(QIcon("res/baseline-library_add-24px.svg"), "Charger fichier", self.Charge_fichier)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-library_add-24px.svg"), "Charger fichier", self.charge_fichier)
         self.addSeparator()
-        self.addAction(QIcon("res/baseline-arrow_back-24px.svg"), "Chaînage avant", self.chainage_avant)
-        self.addAction(QIcon("res/baseline-arrow_forward-24px.svg"), "Chaînage arriere", self.chainage_arriere)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-arrow_back-24px.svg"), "Chaînage avant", self.chainage_avant)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-arrow_forward-24px.svg"), "Chaînage arriere", self.chainage_arriere)
         self.addSeparator()
-        self.addAction(QIcon("res/baseline-settings-20px.svg"), "Configuration", self.configuration)
-        self.addAction(QIcon("res/baseline-help-24px.svg"), "Aide", self.aide)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-settings-20px.svg"), "Configuration", self.configuration)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-help-24px.svg"), "Aide", self.aide)
 
-    def Charge_fichier(self):
+    def basculer(self):
+        if self.isHidden():
+            self.setHidden(False)
+        else:
+            self.setHidden(True)
+
+    def charge_fichier(self):
         nom_fichier = QFileDialog.getOpenFileName(self, "Charger fichier")[0]
         if nom_fichier != "":
             self.cli.lire_fichier(nom_fichier)
@@ -153,7 +170,18 @@ class BarreCommande(QToolBar):
         configuration = Configuration(self.cli, self)
         rep = configuration.exec()
         if rep == QDialog.Accepted:
-            print("A")
+            if configuration.oui.isChecked():
+                self.cli.moteur.trace = Trace.OUI
+            elif configuration.non.isChecked():
+                self.cli.moteur.trace = Trace.NON
+            elif configuration.min.isChecked():
+                self.cli.moteur.trace = Trace.MIN
+            if configuration.complexe.isChecked():
+                self.cli.moteur.selection_regle = SelectionRegle.COMPLEXE
+            elif configuration.premiere.isChecked():
+                self.cli.moteur.selection_regle = SelectionRegle.PREMIERE
+            elif configuration.plus .isChecked():
+                self.cli.moteur.selection_regle = SelectionRegle.PLUS
 
     def aide(self):
         aide = Aide(self)
@@ -161,18 +189,58 @@ class BarreCommande(QToolBar):
 
 
 class Menu(QMenuBar):
+    mise_a_jour = Signal()
+    basculer_bar = Signal()
+    basculer_bdc = Signal()
 
-    def __init__(self, parent = None):
+    def __init__(self, cli, parent = None):
         super(Menu, self).__init__(parent)
+        self.cli = cli
         self.fichier = self.addMenu("Fichier")
-        self.fichier.addAction("Ouvrire fichier")
+        self.fichier.addAction("Charger fichier", self.charge_fichier)
+        self.fichier.addSeparator()
+        self.fichier.addAction("Configuration", self.configuration)
         self.fichier.addSeparator()
         self.fichier.addAction("Quitter", QApplication.quit)
         self.affichage = self.addMenu("Affichage")
+        self.affichage.addAction("Afficher/Cacher Barre de commande", self.basculer_bar.emit)
+        self.affichage.addAction("Afficher/Cacher Base de connaisance", self.basculer_bdc.emit)
+        self.basedeconnaissance = self.addMenu("Base de connaissance")
+        self.basedeconnaissance.addAction("Chaînage avant", self.chainage_avant)
+        self.basedeconnaissance.addAction("Chaînage avant", self.chainage_arriere)
+        self.basedeconnaissance.addSeparator()
+        self.basedeconnaissance.addAction("Réinitialiser", self.reinitialiser)
         self.aide = self.addMenu("Aide")
         self.aide.addAction("Contenu...", self.contenu)
         self.aide.addSeparator()
         self.aide.addAction("A propos", self.apropos)
+
+    def charge_fichier(self):
+        nom_fichier = QFileDialog.getOpenFileName(self, "Charger fichier")[0]
+        if nom_fichier != "":
+            self.cli.lire_fichier(nom_fichier)
+            self.mise_a_jour.emit()
+
+    def chainage_avant(self):
+        demandefait = DemandeFait("Chaînage avant", self)
+        rep = demandefait.exec()
+        if rep == QDialog.Accepted:
+            self.cli.moteur.chainage_avant(self.cli.basedefaits, self.cli.basederegles, 
+            Fait(demandefait.symbole.text(), AnalyseurSyntaxique.analyse_valeur(demandefait.valeur.text())))
+            self.mise_a_jour.emit()
+
+    def chainage_arriere(self):
+        demandefait = DemandeFait("Chaînage arrière", self)
+        rep = demandefait.exec()
+        if rep == QDialog.Accepted:
+            self.cli.moteur.chainage_arriere(self.cli.basedefaits, self.cli.basederegles, 
+            Fait(demandefait.symbole.text(), AnalyseurSyntaxique.analyse_valeur(demandefait.valeur.text())), None, None)
+            self.mise_a_jour.emit()
+
+    def reinitialiser(self):
+        self.cli.basedefaits = BaseDeFaits()
+        self.cli.basederegles = BaseDeRegles()
+        self.mise_a_jour.emit()
 
     def contenu(self):
         aide = Aide(self)
@@ -182,6 +250,23 @@ class Menu(QMenuBar):
         apropos = APropos(self)
         apropos.exec()
 
+    def configuration(self):
+        configuration = Configuration(self.cli, self)
+        rep = configuration.exec()
+        if rep == QDialog.Accepted:
+            if configuration.oui.isChecked():
+                self.cli.moteur.trace = Trace.OUI
+            elif configuration.non.isChecked():
+                self.cli.moteur.trace = Trace.NON
+            elif configuration.min.isChecked():
+                self.cli.moteur.trace = Trace.MIN
+            if configuration.complexe.isChecked():
+                self.cli.moteur.selection_regle = SelectionRegle.COMPLEXE
+            elif configuration.premiere.isChecked():
+                self.cli.moteur.selection_regle = SelectionRegle.PREMIERE
+            elif configuration.plus .isChecked():
+                self.cli.moteur.selection_regle = SelectionRegle.PLUS
+
 
 class FenetrePrincipal(QMainWindow):
 
@@ -190,16 +275,22 @@ class FenetrePrincipal(QMainWindow):
         cli = CLI()
         self.setWindowTitle("Système Expert")
         self.setMinimumSize(640, 480)
-        self.setWindowIcon(QIcon("res/icon.svg"))
+        self.setWindowIcon(QIcon(os.path.dirname(__file__) + "/res/icon.svg"))
         self.resize(1280, 720)
         self.terminal = Terminal(cli)
         self.setCentralWidget(self.terminal)
-        self.menu = Menu()
+        self.menu = Menu(cli)
         self.setMenuBar(self.menu)
         self.dock = Dock(cli)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dock)
         self.bare_commande = BarreCommande(cli)
         self.addToolBar(Qt.TopToolBarArea, self.bare_commande)
+        self.terminal.mise_a_jour.connect(self.dock.affichage_base_de_connaissance.mise_a_jour_basedefaits)
+        self.terminal.mise_a_jour.connect(self.dock.affichage_base_de_connaissance.mise_a_jour_basederegles)
+        self.menu.mise_a_jour.connect(self.dock.affichage_base_de_connaissance.mise_a_jour_basedefaits)
+        self.menu.mise_a_jour.connect(self.dock.affichage_base_de_connaissance.mise_a_jour_basederegles)
+        self.menu.basculer_bar.connect(self.bare_commande.basculer)
+        self.menu.basculer_bdc.connect(self.dock.basculer)
         self.bare_commande.mise_a_jour.connect(self.dock.affichage_base_de_connaissance.mise_a_jour_basedefaits)
         self.bare_commande.mise_a_jour.connect(self.dock.affichage_base_de_connaissance.mise_a_jour_basederegles)
 
