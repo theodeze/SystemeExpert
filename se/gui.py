@@ -3,7 +3,7 @@ import sys, os
 from se import CLI, AnalyseurSyntaxique, Fait, Trace, BaseDeFaits, BaseDeRegles, SelectionRegle, Aide, DemandeFait, Configuration, APropos
 from PySide2.QtCore import QObject, QStringListModel, Signal, Slot, Qt, QTranslator, QLocale, QLibraryInfo
 from PySide2.QtWidgets import *
-from PySide2.QtGui import QTextCursor, QIcon
+from PySide2.QtGui import QTextCursor, QIcon, QFont, QFontDatabase
 
 class Stream(QObject):
     newText = Signal((str,))
@@ -93,6 +93,8 @@ class Terminal(QWidget):
         super(Terminal, self).__init__(parent)
 
         self.affichage = QTextBrowser(self)
+
+        self.affichage.setFont(QFont("Overpass Mono", 10))
         self.cli = cli
 
         self.commande = QLineEdit(self)
@@ -130,13 +132,13 @@ class BarreCommande(QToolBar):
         self.cli = cli
         self.setWindowTitle("Barre de commande")
         self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon	)
-        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-library_add-24px.svg"), "Charger fichier", self.charge_fichier)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/icons/baseline-library_add-24px.svg"), "Charger fichier", self.charge_fichier)
         self.addSeparator()
-        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-arrow_back-24px.svg"), "Chaînage avant", self.chainage_avant)
-        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-arrow_forward-24px.svg"), "Chaînage arriere", self.chainage_arriere)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/icons/baseline-arrow_back-24px.svg"), "Chaînage avant", self.chainage_avant)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/icons/baseline-arrow_forward-24px.svg"), "Chaînage arriere", self.chainage_arriere)
         self.addSeparator()
-        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-settings-20px.svg"), "Configuration", self.configuration)
-        self.addAction(QIcon(os.path.dirname(__file__) + "/res/baseline-help-24px.svg"), "Aide", self.aide)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/icons/baseline-settings-20px.svg"), "Configuration", self.configuration)
+        self.addAction(QIcon(os.path.dirname(__file__) + "/res/icons/baseline-help-24px.svg"), "Aide", self.aide)
 
     def basculer(self):
         if self.isHidden():
@@ -273,9 +275,15 @@ class FenetrePrincipal(QMainWindow):
     def __init__(self, parent = None):
         super(FenetrePrincipal, self).__init__(parent)
         cli = CLI()
+
+        QFontDatabase.addApplicationFont(os.path.dirname(__file__) + "/res/fonts/OverpassMono-Bold.ttf")
+        QFontDatabase.addApplicationFont(os.path.dirname(__file__) + "/res/fonts/OverpassMono-Light.ttf")
+        QFontDatabase.addApplicationFont(os.path.dirname(__file__) + "/res/fonts/OverpassMono-Regular.ttf")
+        QFontDatabase.addApplicationFont(os.path.dirname(__file__) + "/res/fonts/OverpassMono-SemiBold.ttf")
+
         self.setWindowTitle("Système Expert")
         self.setMinimumSize(640, 480)
-        self.setWindowIcon(QIcon(os.path.dirname(__file__) + "/res/icon.svg"))
+        self.setWindowIcon(QIcon(os.path.dirname(__file__) + "/res/icons/app.svg"))
         self.resize(1280, 720)
         self.terminal = Terminal(cli)
         self.setCentralWidget(self.terminal)

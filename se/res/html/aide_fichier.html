@@ -1,0 +1,65 @@
+<h1>Aide Fichier</h1>
+
+<p>
+    Un fichier est un ensemble de rêgle(s) et fait(s) que vous pouvez charger.
+</p>
+
+<ul> 
+    <li><a href="#id1" title="aller à la section 1">Fait</a></li> 
+    <li><a href="#id2" title="aller à la section 2">Règle</a></li> 
+    <li><a href="#id3" title="aller à la section 3">Conclusion</a></li> 
+    <li><a href="#id4" title="aller à la section 4">Prémisse</a></li> 
+</ul> 
+
+<h3 id="id1">Fait</h3>
+<p>
+    Un fait est constitué d'un symbole et d'une valeur, un fait ne peut être modifier par le moteur d'inférence. Cependant avec le tableau 
+    dans le dock l'utilsateur peut modifier une valeur. 
+</p>
+<p>
+    Exemple:
+    <blockquote>
+        symbole = valeur
+    </blockquote>
+</p>
+<ul>
+    <li>Un symbole est une suite de caratère ex: ABCdef, A52</li>
+    <li>Un valeur est un nombre, un boolean ou chaine de caratère ex: "chaine", 23.4, Vrai</li>
+</ul>
+
+<h3 id="id2">Règle</h3>
+<p>
+    Une règle est constitué d'un prémisse et d'une conclusion.
+</p>
+<p>
+    Exemple:
+    <blockquote>
+        conclusion := prémisse
+    </blockquote>
+</p>
+
+
+<h4 id="id3">Conclusion</h4>
+<p>
+    Un conclusion est un liste de fait entrecouper de et '&'.
+</p>
+<p>
+    Exemple:
+    <blockquote>
+        fait<br>
+        fait1 & fait2 & ... & faitn
+    </blockquote>
+</p>
+
+<h4 id="id4">Prémisse</h4>
+<p>
+    Une prémisse est constitué d'une suite de proposition qui ne sont que des comparaisons entre deux valeur.
+    Ces propositions sont relier par des connecteur logique que sont le et "&" et le ou "||".
+</p>
+<p>
+    Exemple:
+    <blockquote>
+        symboleA == 4 & symboleB > 23<br>
+        symboleA != symboleB || (symboleC >= 23 & symboleD > 23)
+    </blockquote>
+</p>

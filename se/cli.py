@@ -67,11 +67,9 @@ class CLI:
                 self.afficher_regles()
             else:
                 print("ALERTE: Type règle non reconnus, valeur possible { faits, regles }")
-        elif cmd == "2":
-            self.afficher_regles()
-        elif cmd == "3":
+        elif cmd == "av":
             self.chainage_avant()
-        elif cmd == "4":
+        elif cmd == "ar":
             self.chainage_arriere()
         elif cmd == "aide" or cmd == "help":
             self.aide()
@@ -82,20 +80,13 @@ class CLI:
         print("Liste des commandes :")
         print("\tlire nom_du_fichier.txt : Charge un fichier")
         print("\ttrace [non|min|oui] : Modifie le type d'affichage lors du chainage")
-        print("\tregle [|regles] : Modifie le type de selection des rêgles")
+        print("\tregle [plus|complexe|premiere] : Modifie le type de selection des rêgles")
         print("\tafficher [faits|regles] : Affiche les faits et/ou les rêgles")
         print("\taide : Affiche l'aide")
-        print("\treinitialise : reinitialiser la Base de connaissance")
-        print("\ttrace : affiche le niveau de trace")
-        print("\ttrace <Niveau> : fixe le niveau de trace { oui, min, non }")
-        print("\tregle : affiche le type de regle")
-        print("\tregle <Type> : fixe le type de regle { premiere, complexe, plus }")
-        print("\t1 : afficher la base de faits")
-        print("\t2 : afficher la base de regles")
-        print("\t3 : chainage avant")
-        print("\t4 : chainage arriere")
-        print("\taide : afficher l'aide")
+        print("\treinitialise : Reinitialiser la Base de connaissance")
         print("\tquitter : quitter")
+        print("\tav : chainage avant")
+        print("\tar : chainage arriere")
         print("Exemple:")
         print("\tA = Vrai : Ajout d'un fait")
         print("\tA = Vrai := B == Vrai & C == Faux : Ajout d'une regle")

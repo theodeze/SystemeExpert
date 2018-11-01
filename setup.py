@@ -9,11 +9,15 @@ setup(
     name='SystemeExpert',
     version='0.2',
     description='Systeme Expert 0+',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/theodeze/SystemeExpert',
     packages=find_packages(exclude=['docs']),
     install_requires=['pptree','pyside2'],
     include_package_data=True,
-    package_data={'res': ['*.svg','*.html']},
+    package_data={'res/fonts': ['*.ttf'],
+                'res/html' : ['*.html'],
+                'res/icons' : ['*.svg']},
     entry_points={
         'console_scripts': [
             'se-cli = se:main_cli',
