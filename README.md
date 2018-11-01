@@ -55,10 +55,8 @@ C = True & D = False := A == True || B > 50
 D = True := A == False & B <= 50
 ```
 
-Des exemples de Base de connaissance ce trouve dans le dossier doc.
+Des exemples de Base de connaissance ce trouve dans le dossier docs.
 
 ## A faire
-- probleme opérateur exemple (ex: 4 < b)
-- aide 
 - Faire plus de test
 - et encore plus

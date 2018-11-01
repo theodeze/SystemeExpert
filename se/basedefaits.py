@@ -28,23 +28,24 @@ class BaseDeFaits:
             fait_a_verifier = proposition_a_verifier.en_fait(self)
             if isinstance(fait_a_verifier, bool):
                 return fait_a_verifier
+            operateur_a_verifier = proposition_a_verifier.quel_operateur(self)
             for fait in self.faits:
-                if proposition_a_verifier.operateur == Operateur.EGALITE:
+                if operateur_a_verifier == Operateur.EGALITE:
                     if fait == fait_a_verifier:
                         return True
-                elif proposition_a_verifier.operateur == Operateur.INEGALITE:
+                elif operateur_a_verifier == Operateur.INEGALITE:
                     if fait != fait_a_verifier:
                         return True
-                elif proposition_a_verifier.operateur == Operateur.INFERIORITE:
+                elif operateur_a_verifier == Operateur.INFERIORITE:
                     if fait < fait_a_verifier:
                         return True
-                elif proposition_a_verifier.operateur == Operateur.INFERIORITEOUEGALITE:
+                elif operateur_a_verifier == Operateur.INFERIORITEOUEGALITE:
                     if fait <= fait_a_verifier:
                         return True
-                elif proposition_a_verifier.operateur == Operateur.SUPERIORITE:
+                elif operateur_a_verifier == Operateur.SUPERIORITE:
                     if fait > fait_a_verifier:
                         return True
-                elif proposition_a_verifier.operateur == Operateur.SUPERIORITEOUEGALITE:
+                elif operateur_a_verifier == Operateur.SUPERIORITEOUEGALITE:
                     if fait >= fait_a_verifier:
                         return True
         return False

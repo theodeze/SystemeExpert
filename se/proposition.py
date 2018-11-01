@@ -28,6 +28,42 @@ class Proposition:
                 return "{}".format(self.expression_gauche)
         return "{} {} {}".format(self.expression_gauche, self.operateur.value, self.expression_droite)
 
+    def quel_operateur(self, basedefaits):
+        if AnalyseurSimple.est_fait(self.expression_gauche) and AnalyseurSimple.est_fait(self.expression_droite):
+            valeur_gauche = AnalyseurSimple.valuer_expression(self.expression_gauche, basedefaits)
+            valeur_droite = AnalyseurSimple.valuer_expression(self.expression_droite, basedefaits)
+            if valeur_gauche != None and valeur_droite != None:
+                return self.operateur
+            elif valeur_gauche == None and valeur_droite != None:
+                return self.operateur
+            elif valeur_gauche != None and valeur_droite == None:
+                if self.operateur == Operateur.INFERIORITE:
+                    return Operateur.SUPERIORITE
+                elif self.operateur == Operateur.INFERIORITEOUEGALITE:
+                    return Operateur.SUPERIORITEOUEGALITE
+                elif self.operateur == Operateur.SUPERIORITE:
+                    return Operateur.INFERIORITE
+                elif self.operateur == Operateur.SUPERIORITEOUEGALITE:
+                    return Operateur.INFERIORITEOUEGALITE
+                else:
+                    return self.operateur
+        elif not AnalyseurSimple.est_fait(self.expression_gauche) and AnalyseurSimple.est_fait(self.expression_droite):
+            if self.operateur == Operateur.INFERIORITE:
+                return Operateur.SUPERIORITE
+            elif self.operateur == Operateur.INFERIORITEOUEGALITE:
+                return Operateur.SUPERIORITEOUEGALITE
+            elif self.operateur == Operateur.SUPERIORITE:
+                return Operateur.INFERIORITE
+            elif self.operateur == Operateur.SUPERIORITEOUEGALITE:
+                return Operateur.INFERIORITEOUEGALITE
+            else:
+                return self.operateur
+        elif AnalyseurSimple.est_fait(self.expression_gauche) and not AnalyseurSimple.est_fait(self.expression_droite):
+            return self.operateur
+        elif not AnalyseurSimple.est_fait(self.expression_gauche) and not AnalyseurSimple.est_fait(self.expression_droite):
+            return self.operateur
+        return self.operateur
+
     def en_fait(self, basedefaits):
         if AnalyseurSimple.est_fait(self.expression_gauche) and AnalyseurSimple.est_fait(self.expression_droite):
             valeur_gauche = AnalyseurSimple.valuer_expression(self.expression_gauche, basedefaits)
