@@ -4,7 +4,7 @@ from pptree import *
 class MoteurDInferance:
 
     def __init__(self):
-        self.trace = Trace.NON
+        self.trace = Trace.MIN
         self.selection_regle = SelectionRegle.PREMIERE
 
     def chainage_avant(self, basedefaits, basederegles, fait_a_etablir):
@@ -80,9 +80,9 @@ class MoteurDInferance:
         valide = False
         while not valide and ER != []:
             valide = True # plus besoin
-            R = ER[0]
+            R = basederegles.selection_tableau(ER, basedefaits, self.selection_regle)
             noeud2 = Node(str(R), noeud)
-            ER.pop(0)
+            ER.remove(R)
             pile_valeurs = []
             for lex in Regle.conversion_infixee_en_postfixee(R.premisses):
                 if isinstance(lex, Proposition):

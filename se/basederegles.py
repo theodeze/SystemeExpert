@@ -29,7 +29,6 @@ class BaseDeRegles:
                 return True
         return False      
     
-
     def regles_applicable(self, basedefaits):
         regles = []
         for regle in self.regles:
@@ -37,6 +36,30 @@ class BaseDeRegles:
                 regles.append(regle)
         return regles          
     
+    @staticmethod
+    def selection_tableau(tab_regle, basedefaits, selection_regle):
+        if selection_regle == SelectionRegle.PREMIERE:
+             return tab_regle[0]
+        elif selection_regle == SelectionRegle.COMPLEXE:
+            max_complexe = -1
+            R = tab_regle[0]
+            for regle in tab_regle:
+                nb_complexe = len(regle.premisses)
+                if nb_complexe > max_complexe:
+                    R = regle
+                    max_complexe = nb_complexe
+            return R
+        elif selection_regle == SelectionRegle.PLUS:
+            max_plus = -1
+            R = tab_regle[0]
+            for regle in tab_regle:
+                nb_plus = regle.nb_premisses_a_satisfaire(basedefaits)
+                if nb_plus > max_plus:
+                    R = regle
+                    max_plus = nb_plus
+            return R
+        return None
+
     def selection(self, basedefaits, selection_regle):
         if selection_regle == SelectionRegle.PREMIERE:
             for regle in self.regles:
@@ -53,16 +76,15 @@ class BaseDeRegles:
                         max_complexe = nb_complexe
             return R
         elif selection_regle == SelectionRegle.PLUS:
-            max_complexe = -1
+            max_plus = -1
             R = None
-            for regle in self.regles:
+            for regle in tab_regle:
                 if regle.applicable(basedefaits):
-                    nb_premisses_satisfaire = len(regle.premisses)
-                    if nb_complexe > max_complexe:
+                    nb_plus = regle.nb_premisses_a_satisfaire(basedefaits)
+                    if nb_plus > max_plus:
                         R = regle
-                        max_complexe = nb_complexe
+                        max_plus = nb_plus
             return R
-            return None
         return None
 
     def list_regles_ayant_conclusion(self, conclusion, basedefaits):
