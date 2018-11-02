@@ -11,6 +11,9 @@ class Fait:
             return "¬{}".format(self.symbole)
         return "{} ≔ {}".format(self.symbole, self.valeur)
 
+    def __hash__(self):
+        return hash(self.symbole) + hash(self.valeur)
+
     def __eq__(self, fait):
         if not isinstance(fait, Fait):
             return False

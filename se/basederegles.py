@@ -1,9 +1,11 @@
-from se import Fait, Proposition, Operateur, Regle, BaseDeFaits, SelectionRegle
+import collections
+from se import Log, Fait, Proposition, Operateur, Regle, BaseDeFaits, SelectionRegle
 
 class BaseDeRegles: 
 
     def __init__(self):
         self.regles = []
+        self.strict = False
     
     def __str__(self):
         chaine =  "======== Base de Rêgle ========\n"
@@ -18,10 +20,40 @@ class BaseDeRegles:
             liste.append(str(regle))
         return liste
 
+    def nom_regles(self, basedefaits):
+        regles = "{ "
+        for regles_applicale in self.regles_applicable(basedefaits):
+            regles += regles_applicale.nom + " "
+        regles += "}"
+        return regles
+
+    def peut_ajouter(self, regle_a_ajouter):
+        compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+        conclusion_ok = True
+        premisses_ok = True
+        for regle in self.regles:
+            if compare(regle_a_ajouter.conclusions, regle.conclusions):
+                if self.strict:
+                    Log.warning("Deux rêgles ont les même conclusion (Redondance)")
+                else:
+                    Log.debug("Deux rêgles ont les même conclusion (Redondance)")
+                conclusion_ok = False
+            if regle_a_ajouter.premisses == regle.premisses:
+                if self.strict:
+                    Log.warning("Deux rêgles ont les même premisse (Incompatibilité)")
+                else:
+                    Log.debug("Deux rêgles ont les même premisse (Incompatibilité)")
+                premisses_ok = False  
+        if self.strict:
+            return conclusion_ok and premisses_ok
+        return conclusion_ok or premisses_ok
+
     def ajouter(self, regle):
-        if not isinstance(regle, Regle):
-            raise TypeError("regle doit être une regle")
-        self.regles.append(regle)
+        Log.debug("Ajout de la rêgle " + str(regle))
+        if self.peut_ajouter(regle):
+            self.regles.append(regle)
+        elif not self.strict:
+            Log.warning("Ajout de la regle imposible car le regle existe déjâ (Inconsitante)")
 
     def applicable(self, basedefaits):
         for regle in self.regles:
@@ -61,6 +93,8 @@ class BaseDeRegles:
         return None
 
     def selection(self, basedefaits, selection_regle):
+        Log.debug("Selection d'une règle parmis " + self.nom_regles(basedefaits))
+        Log.debug("Avec la règle " + selection_regle.value)
         if selection_regle == SelectionRegle.PREMIERE:
             for regle in self.regles:
                 if regle.applicable(basedefaits):
@@ -78,7 +112,7 @@ class BaseDeRegles:
         elif selection_regle == SelectionRegle.PLUS:
             max_plus = -1
             R = None
-            for regle in tab_regle:
+            for regle in self.regles:
                 if regle.applicable(basedefaits):
                     nb_plus = regle.nb_premisses_a_satisfaire(basedefaits)
                     if nb_plus > max_plus:
@@ -93,7 +127,3 @@ class BaseDeRegles:
             if regle.contient_conclusion(conclusion, basedefaits):
                 ensemble_regle.append(regle)
         return ensemble_regle
-
-    def activer_tous(self):
-        for regle in self.regles:
-            regle.activer()

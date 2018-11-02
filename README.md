@@ -13,8 +13,8 @@
 - [ ] règle comportant comme prémisses les faits déduits le plus récents
 
 ### 3) Possibilité de fournir des explications:
-- [ ] à la demande de l'utilisateur
-- [ ] en cas de problème
+- [x] à la demande de l'utilisateur
+- [x] en cas de problème
 - [x] explication sous forme de trace
 - [x] explication sous forme de trace abrégées
 
@@ -25,14 +25,18 @@
 ## Installation
 
 ```Bash
-$ python setup.py install --user
-$ systemeexpert
+$ git clone https://github.com/theodeze/SystemeExpert.git
+$ cd SystemeExpert 
+$ python3 setup.py install --user
+$ cd ..
+$ rm -rf SystemeExpert
 ```
 
 ## Utilisation
 
 ```Bash
-$ python run.py ou systemeexpert si installé
+$ se-cli # version terminal
+$ se-gui # version graphique
 ```
 
 ## Syntaxe du fichier de Base de connaissance

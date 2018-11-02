@@ -9,7 +9,9 @@ class Configuration(QDialog):
     def __init__(self, cli, parent = None):
         super(Configuration, self).__init__(parent)
         self.setWindowTitle("Configuration")
-        self.layout = QGridLayout()
+        self.layout = QVBoxLayout()
+        self.config = QHBoxLayout()
+        self.boutton = QHBoxLayout()
         self.cli = cli
 
         self.trace = QGroupBox("Niveau de trace")
@@ -21,7 +23,7 @@ class Configuration(QDialog):
         self.trace_layout.addWidget(self.min)
         self.trace_layout.addWidget(self.oui)
         self.trace.setLayout(self.trace_layout)
-        self.layout.addWidget(self.trace, 0, 0)
+        self.config.addWidget(self.trace)
 
         self.regle = QGroupBox("Choix de la règle déclenchée")
         self.plus = QRadioButton("Règles ayant le plus de prémisses à satisfaire")
@@ -32,15 +34,27 @@ class Configuration(QDialog):
         self.regle_layout.addWidget(self.complexe)
         self.regle_layout.addWidget(self.premiere)
         self.regle.setLayout(self.regle_layout)
-        self.layout.addWidget(self.regle, 0, 1)
+        self.config.addWidget(self.regle)
+
+        self.bc_strict = QGroupBox("Modèle de le base de connaissance")
+        self.non_strict = QRadioButton("Non strict")
+        self.strict = QRadioButton("Strict")
+        self.bc_strict_layout = QVBoxLayout()
+        self.bc_strict_layout.addWidget(self.non_strict)
+        self.bc_strict_layout.addWidget(self.strict)
+        self.bc_strict.setLayout(self.bc_strict_layout)
+        self.config.addWidget(self.bc_strict)
 
         self.annuler = QPushButton("Annuler")
         self.annuler.clicked.connect(self.annule)
-        self.layout.addWidget(self.annuler, 1, 0)
+        self.boutton.addWidget(self.annuler)
 
         self.valider = QPushButton("Valider")
         self.valider.clicked.connect(self.valide)
-        self.layout.addWidget(self.valider, 1, 1)
+        self.boutton.addWidget(self.valider)
+
+        self.layout.addLayout(self.config)
+        self.layout.addLayout(self.boutton)
 
         self.init_boutton()
         self.setLayout(self.layout)
@@ -59,6 +73,11 @@ class Configuration(QDialog):
             self.plus.setChecked(True)
         elif self.cli.moteur.selection_regle == SelectionRegle.PREMIERE:
             self.premiere.setChecked(True)
+
+        if self.cli.basederegles.strict:
+            self.strict.setChecked(True)
+        else:
+            self.non_strict.setChecked(True)
 
     def valide(self):
         self.accept()
@@ -99,7 +118,6 @@ class APropos(QDialog):
         self.texte.setOpenExternalLinks(True)
         self.layout.addWidget(self.texte)
         self.setLayout(self.layout)
-
 
 
 class DemandeFait(QDialog):

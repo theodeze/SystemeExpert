@@ -1,6 +1,6 @@
 import os
 import sys
-from se import BaseDeFaits, Fait, AnalyseurSyntaxique, BaseDeRegles, MoteurDInferance, Trace, SelectionRegle
+from se import Log, BaseDeFaits, Fait, AnalyseurSyntaxique, BaseDeRegles, MoteurDInferance, Trace, SelectionRegle
 
 class CLI:
 
@@ -10,6 +10,7 @@ class CLI:
         self.moteur = MoteurDInferance()
 
     def menu(self):
+        Log.init()
         try:
             cmd = ""
             print("Système Expert d'ordre 0+")
@@ -17,6 +18,7 @@ class CLI:
             while cmd != "quitter" and cmd != "exit":
                 print(">>>", end=' ')
                 self.commande(input())
+            Log.remove_log()
         except KeyboardInterrupt:
             sys.exit(0)
     
@@ -67,6 +69,8 @@ class CLI:
                 self.afficher_regles()
             else:
                 print("ALERTE: Type règle non reconnus, valeur possible { faits, regles }")
+        elif cmd.startswith("log"):
+            Log.print()
         elif cmd == "av":
             self.chainage_avant()
         elif cmd == "ar":

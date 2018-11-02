@@ -1,3 +1,4 @@
+from .log import *
 from .type import *
 from .fait import *
 from .proposition import *
@@ -7,5 +8,5 @@ from .basedefaits import *
 from .basederegles import *
 from .moteurdinference import *
 from .cli import *
-from .guidialog import *
+from .gui_dialog import *
 from .gui import *

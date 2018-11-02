@@ -1,5 +1,5 @@
 import re
-from se import Operateur, Parenthese, Connecteur, Fait, Proposition, Regle, AnalyseurSimple
+from se import Log, Operateur, Parenthese, Connecteur, Fait, Proposition, Regle, AnalyseurSimple
 
 class AnalyseurSyntaxique(AnalyseurSimple):
 
@@ -133,14 +133,14 @@ class AnalyseurSyntaxique(AnalyseurSimple):
             try:
                 basederegles.ajouter(AnalyseurSyntaxique.analyse_regle(chaine))
             except Exception as e:
-                print("ALERTE: {}".format(e))          
+                Log.warning("{}".format(e))          
         elif "=" in chaine:
             try:
                 basedefaits.ajouter(AnalyseurSyntaxique.analyse_fait(chaine))
             except Exception as e:
-                print("ALERTE: {}".format(e))    
+                Log.warning("{}".format(e))    
         elif chaine.strip() != "":
-            print("ALERTE: Non reconnus {}".format(chaine))       
+            Log.warning("Non reconnus {}".format(chaine))       
 
     @staticmethod
     def analyse_fichier(nom_fichier, basedefaits, basederegles):

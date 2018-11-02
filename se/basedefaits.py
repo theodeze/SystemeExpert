@@ -1,4 +1,4 @@
-from se import Proposition, Operateur, Fait
+from se import Log, Proposition, Operateur, Fait
 
 class BaseDeFaits:
     
@@ -20,40 +20,55 @@ class BaseDeFaits:
 
     def contient(self, fait_a_verifier):
         if isinstance(fait_a_verifier, Fait):
+            Log.debug("Contient le fait " + str(fait_a_verifier) + "?")
             for fait in self.faits:
                 if fait == fait_a_verifier:
+                    Log.debug("Oui")
                     return True
         if isinstance(fait_a_verifier, Proposition):
             proposition_a_verifier = fait_a_verifier
             fait_a_verifier = proposition_a_verifier.en_fait(self)
             if isinstance(fait_a_verifier, bool):
+                if fait_a_verifier:
+                    Log.debug("Non")
+                else:
+                    Log.debug("Oui")
                 return fait_a_verifier
+            Log.debug("Contient le fait " + str(fait_a_verifier) + " (" + str(proposition_a_verifier)  + ") ?")
             operateur_a_verifier = proposition_a_verifier.quel_operateur(self)
             for fait in self.faits:
                 if operateur_a_verifier == Operateur.EGALITE:
                     if fait == fait_a_verifier:
+                        Log.debug("Oui")
                         return True
                 elif operateur_a_verifier == Operateur.INEGALITE:
                     if fait != fait_a_verifier:
+                        Log.debug("Oui")
                         return True
                 elif operateur_a_verifier == Operateur.INFERIORITE:
                     if fait < fait_a_verifier:
+                        Log.debug("Oui")
                         return True
                 elif operateur_a_verifier == Operateur.INFERIORITEOUEGALITE:
                     if fait <= fait_a_verifier:
+                        Log.debug("Oui")
                         return True
                 elif operateur_a_verifier == Operateur.SUPERIORITE:
                     if fait > fait_a_verifier:
+                        Log.debug("Oui")
                         return True
                 elif operateur_a_verifier == Operateur.SUPERIORITEOUEGALITE:
                     if fait >= fait_a_verifier:
+                        Log.debug("Oui")
                         return True
+        Log.debug("Non")
         return False
 
     def modifier(self, ligne, fait_a_modifier):
         if isinstance(fait_a_modifier, Fait):
             if not self.peut_modifier(ligne, fait_a_modifier.symbole):
                 raise Exception("Le symbole est déja pris")
+            Log.debug("Modification du fait " + str(fait_a_modifier))
             index = 0
             for fait in self.faits:
                 if index == ligne:
@@ -81,6 +96,7 @@ class BaseDeFaits:
 
     def ajouter(self, fait_a_ajouter):
         if isinstance(fait_a_ajouter, Fait):
+            Log.debug("Ajout du fait " + str(fait_a_ajouter))
             for fait in self.faits:
                 if fait.symbole == fait_a_ajouter.symbole:
                     if fait.valeur == None:
@@ -89,7 +105,7 @@ class BaseDeFaits:
                     elif fait.valeur == fait_a_ajouter.valeur:
                         return
                     else:
-                        raise Exception("ajout du fait imposible car le fait existe déjâ (inconsitante)")
+                        raise Exception("Ajout du fait imposible car le fait existe déjâ (inconsitante)")
             self.faits.append(fait_a_ajouter)
 
     def valeur_fait(self, symbole):

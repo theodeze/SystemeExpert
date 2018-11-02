@@ -1,6 +1,6 @@
 
 import sys, os
-from se import CLI, AnalyseurSyntaxique, Fait, Trace, BaseDeFaits, BaseDeRegles, SelectionRegle, Aide, DemandeFait, Configuration, APropos
+from se import Log, CLI, AnalyseurSyntaxique, Fait, Trace, BaseDeFaits, BaseDeRegles, SelectionRegle, Aide, DemandeFait, Configuration, APropos
 from PySide2.QtCore import QObject, QStringListModel, Signal, Slot, Qt, QTranslator, QLocale, QLibraryInfo
 from PySide2.QtWidgets import *
 from PySide2.QtGui import QTextCursor, QIcon, QFont, QFontDatabase
@@ -65,7 +65,8 @@ class AffichageBaseDeConnaissance(QWidget):
                 else:
                     self.cli.basedefaits.ajouter(Fait(symbole, AnalyseurSyntaxique.analyse_valeur(valeur)))
                     self.affichage_basedefaits.setRowCount(self.affichage_basedefaits.rowCount() + 1)
-            except Exception:
+            except Exception as e:
+                Log.warning(e)
                 self.affichage_basedefaits.setItem(ligne, 0, QTableWidgetItem(self.cli.basedefaits.symbole(ligne)))
 
 
@@ -93,11 +94,11 @@ class Terminal(QWidget):
         super(Terminal, self).__init__(parent)
 
         self.affichage = QTextBrowser(self)
-
         self.affichage.setFont(QFont("Overpass Mono", 10))
         self.cli = cli
 
         self.commande = QLineEdit(self)
+        self.commande.setFont(QFont("Overpass Mono", 10))
         self.commande.returnPressed.connect(self.envoyer_commande)
 
         self.layout = QGridLayout(self)
@@ -105,11 +106,19 @@ class Terminal(QWidget):
         self.layout.addWidget(self.commande, 1, 0)
         self.setLayout(self.layout)
 
+        self.change_couleur("#94A3A5","#282a36")
+
         sys.stdout = Stream(self.afficher_commande)
+        Log.init()
         
     def __del__(self):
         sys.stdout = sys.__stdout__
+        Log.remove_log()
     
+    def change_couleur(self, color, background):
+        self.affichage.setStyleSheet("color: " + color + "; background-color: " + background)
+        self.commande.setStyleSheet("color: " + color + "; background-color: " + background)
+
     def afficher_commande(self, text):
         cursor = self.affichage.textCursor()
         cursor.movePosition(QTextCursor.End)
@@ -184,6 +193,10 @@ class BarreCommande(QToolBar):
                 self.cli.moteur.selection_regle = SelectionRegle.PREMIERE
             elif configuration.plus .isChecked():
                 self.cli.moteur.selection_regle = SelectionRegle.PLUS
+            if configuration.strict.isChecked():
+                self.cli.basederegles.strict = True
+            else:
+                self.cli.basederegles.strict = False
 
     def aide(self):
         aide = Aide(self)
@@ -245,6 +258,11 @@ class Menu(QMenuBar):
         self.mise_a_jour.emit()
 
     def contenu(self):
+        Log.critical("E")
+        Log.error("D")
+        Log.warning("C")
+        Log.debug("B")
+        Log.info("A")
         aide = Aide(self)
         aide.exec()
 
@@ -268,6 +286,10 @@ class Menu(QMenuBar):
                 self.cli.moteur.selection_regle = SelectionRegle.PREMIERE
             elif configuration.plus .isChecked():
                 self.cli.moteur.selection_regle = SelectionRegle.PLUS
+            if configuration.strict.isChecked():
+                self.cli.basederegles.strict = True
+            else:
+                self.cli.basederegles.strict = False
 
 
 class FenetrePrincipal(QMainWindow):

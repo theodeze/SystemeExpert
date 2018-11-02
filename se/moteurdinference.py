@@ -1,4 +1,4 @@
-from se import Fait, Proposition, Operateur, BaseDeFaits, BaseDeRegles, Connecteur, Regle, Trace, SelectionRegle
+from se import Log, Fait, Proposition, Operateur, BaseDeFaits, BaseDeRegles, Connecteur, Regle, Trace, SelectionRegle
 from pptree import *
 
 class MoteurDInferance:
@@ -19,18 +19,14 @@ class MoteurDInferance:
             elif self.trace == Trace.OUI:
                 print("===============================")
                 print("Iteration " + str(iteration))
-                regles = "{ "
-                for regles_applicale in basederegles.regles_applicable(basedefaits):
-                    regles += regles_applicale.nom + " "
-                regles += "}"
-                print("Règles déclenchables : " + regles)
+                print("Règles déclenchables : " + basederegles.nom_regles(basedefaits))
                 print("Déclenchement de " + regle.nom)
             regle.appliquer(basedefaits)
+            faits = "{ "
+            for fait in regle.conclusions:
+                faits += str(fait) + " "
+            faits += "}"
             if self.trace == Trace.OUI:
-                faits = "{ "
-                for fait in regle.conclusions:
-                    faits += str(fait) + " "
-                faits += "}"
                 print("Ajout des faits : " + faits)
             regle.est_desactive = True
             valide = basedefaits.contient(fait_a_etablir)
