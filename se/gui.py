@@ -1,20 +1,9 @@
 
 import sys, os
-from se import Log, CLI, AnalyseurSyntaxique, Fait, Trace, BaseDeFaits, BaseDeRegles, SelectionRegle, Aide, DemandeFait, Configuration, APropos
-from PySide2.QtCore import QObject, QStringListModel, Signal, Slot, Qt, QTranslator, QLocale, QLibraryInfo
+from se import Log, CLI, AnalyseurSyntaxique, Fait, Trace, BaseDeFaits, BaseDeRegles, SelectionRegle, Aide, DemandeFait, Configuration, APropos, Terminal
+from PySide2.QtCore import *
 from PySide2.QtWidgets import *
-from PySide2.QtGui import QTextCursor, QIcon, QFont, QFontDatabase
-
-class Stream(QObject):
-    newText = Signal((str,))
-
-    def __init__(self, afficher_commande):
-        super(Stream, self).__init__()
-        self.newText.connect(afficher_commande)
-
-    def write(self, text):
-        self.newText.emit(str(text))
-
+from PySide2.QtGui import *
 
 class AffichageBaseDeConnaissance(QWidget):
 
@@ -85,53 +74,6 @@ class Dock(QDockWidget):
             self.setHidden(False)
         else:
             self.setHidden(True)
-
-
-class Terminal(QWidget):
-    mise_a_jour = Signal()
-
-    def __init__(self, cli, parent = None):
-        super(Terminal, self).__init__(parent)
-
-        self.affichage = QTextBrowser(self)
-        self.affichage.setFont(QFont("Overpass Mono", 10))
-        self.cli = cli
-
-        self.commande = QLineEdit(self)
-        self.commande.setFont(QFont("Overpass Mono", 10))
-        self.commande.returnPressed.connect(self.envoyer_commande)
-
-        self.layout = QGridLayout(self)
-        self.layout.addWidget(self.affichage, 0, 0)
-        self.layout.addWidget(self.commande, 1, 0)
-        self.setLayout(self.layout)
-
-        self.change_couleur("#94A3A5","#282a36")
-
-        sys.stdout = Stream(self.afficher_commande)
-        Log.init()
-        
-    def __del__(self):
-        sys.stdout = sys.__stdout__
-        Log.remove_log()
-    
-    def change_couleur(self, color, background):
-        self.affichage.setStyleSheet("color: " + color + "; background-color: " + background)
-        self.commande.setStyleSheet("color: " + color + "; background-color: " + background)
-
-    def afficher_commande(self, text):
-        cursor = self.affichage.textCursor()
-        cursor.movePosition(QTextCursor.End)
-        cursor.insertText(text)
-        self.affichage.setTextCursor(cursor)
-        self.affichage.ensureCursorVisible()
-
-    def envoyer_commande(self):
-        print(">>> " + self.commande.text())
-        self.cli.commande(self.commande.text())
-        self.commande.clear()
-        self.mise_a_jour.emit()
-
 
 class BarreCommande(QToolBar):
     mise_a_jour = Signal() 

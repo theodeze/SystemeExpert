@@ -29,6 +29,8 @@ class Proposition:
         return "{} {} {}".format(self.expression_gauche, self.operateur.value, self.expression_droite)
 
     def __eq__(self, proposition):
+        if not isinstance(proposition, Proposition):
+            return False
         return (self.expression_droite == proposition.expression_droite 
             and self.expression_gauche == proposition.expression_gauche
             and self.operateur == proposition.operateur) or (self.expression_droite == proposition.expression_gauche 
@@ -36,7 +38,9 @@ class Proposition:
             and self.operateur == Proposition.inv_operateur(proposition.operateur))
 
     def __ne__(self, proposition):
-        return not (self.expression_droite == proposition.expression_droite 
+        if not isinstance(proposition, Proposition):
+            return True
+        return  not (self.expression_droite == proposition.expression_droite 
             and self.expression_gauche == proposition.expression_gauche
             and self.operateur == proposition.operateur) or (self.expression_droite == proposition.expression_gauche 
             and self.expression_gauche == proposition.expression_droite

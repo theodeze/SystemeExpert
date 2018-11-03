@@ -1,8 +1,8 @@
 import os
 from se import CLI, AnalyseurSyntaxique, Fait, Trace, SelectionRegle
-from PySide2.QtCore import QObject, Signal, Slot, Qt
+from PySide2.QtCore import *
 from PySide2.QtWidgets import *
-from PySide2.QtGui import QIcon
+from PySide2.QtGui import *
 
 class Configuration(QDialog):
 
