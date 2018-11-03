@@ -67,7 +67,7 @@ class BaseDeFaits:
     def modifier(self, ligne, fait_a_modifier):
         if isinstance(fait_a_modifier, Fait):
             if not self.peut_modifier(ligne, fait_a_modifier.symbole):
-                raise Exception("Le symbole est déja pris")
+                Log.warning("Le symbole est déja pris")
             Log.debug("Modification du fait " + str(fait_a_modifier))
             index = 0
             for fait in self.faits:
@@ -105,7 +105,7 @@ class BaseDeFaits:
                     elif fait.valeur == fait_a_ajouter.valeur:
                         return
                     else:
-                        raise Exception("Ajout du fait imposible car le fait existe déjâ (inconsitante)")
+                        Log.warning("Ajout du fait imposible car le fait existe déjâ (Inconsitante)")
             self.faits.append(fait_a_ajouter)
 
     def valeur_fait(self, symbole):

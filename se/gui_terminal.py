@@ -21,10 +21,10 @@ class ColorationSyntax(QSyntaxHighlighter):
         self.regles = []
 
         motcles_format = QTextCharFormat()
-        motcles_format.setForeground(Qt.blue)
+        motcles_format.setForeground(QColor("#315EEE"))
         motcles_format.setFontWeight(QFont.Bold)
         # liste des mots à considérer
-        motcles_motifs = ["TRACE", "LOG", "LIRE", "REGLE", "AIDE", "REINITIALISE",
+        motcles_motifs = ["TRACE", "LOG", "LIRE", "AFFICHER", "REGLE", "AIDE", "REINITIALISE",
                       "DEBUG", "INFO", "BF", "R[0-9]+"]
         motcles_motifs += ["TRUE", "FALSE", "VRAI", "FAUX"]
         for motcles_motif in motcles_motifs:
@@ -33,7 +33,7 @@ class ColorationSyntax(QSyntaxHighlighter):
             self.regles.append([motcles_regex, motcles_format])
 
         motimp_format = QTextCharFormat()
-        motimp_format.setForeground(Qt.red)
+        motimp_format.setForeground(QColor("#DA3E39"))
         motimp_format.setFontWeight(QFont.Bold)
         motimp_motifs = ["WARNING", "ERROR", "CRITICAL"]
         for motimp_motif in motimp_motifs:
@@ -42,34 +42,34 @@ class ColorationSyntax(QSyntaxHighlighter):
             self.regles.append([motimp_regex, motimp_format])
 
         operateur_format = QTextCharFormat()
-        operateur_format.setForeground(Qt.blue)
-        operateur_motif = "[⊢:∨∧<>!=&\|]+"
+        operateur_format.setForeground(QColor("#0E6FAD"))
+        operateur_motif = "[⊢:∨∧<>!≔=&\|]+"
         operateur_regex = QRegExp(operateur_motif)
         self.regles.append([operateur_regex, operateur_format])
 
 
         delimiteur_format = QTextCharFormat()
-        delimiteur_format.setForeground(Qt.red)
+        delimiteur_format.setForeground(QColor("#0E6FAD"))
         delimiteur_motif = "[\)\(]+|[\{\}]+|[][]+"
         delimiteur_regex = QRegExp(delimiteur_motif)
         self.regles.append([delimiteur_regex, delimiteur_format])
 
         nombre_format = QTextCharFormat()
-        nombre_format.setForeground(Qt.darkGreen)
+        nombre_format.setForeground(QColor("#41933E"))
         nombre_motif =  "\\b[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\\b"
         nombre_regex = QRegExp(nombre_motif)
         nombre_regex.setMinimal(True)
         self.regles.append([nombre_regex, nombre_format])
 
         chaine_format = QTextCharFormat()
-        chaine_format.setForeground(Qt.red)
+        chaine_format.setForeground(QColor("#930092"))
         chaine_motif = '\".*\"'
         chaine_regex = QRegExp(chaine_motif)
         chaine_regex.setMinimal(True)
         self.regles.append([chaine_regex, chaine_format])
 
         comment_format = QTextCharFormat()
-        comment_format.setForeground(Qt.gray)
+        comment_format.setForeground(QColor("#8E8F96"))
         comment_motif = "#[^\n]*"
         comment_regex = QRegExp(comment_motif)
         self.regles.append([comment_regex, comment_format])
@@ -82,6 +82,22 @@ class ColorationSyntax(QSyntaxHighlighter):
                 self.setFormat(index, length, tformat)
                 index = expression.indexIn(text, index + length)
 
+class LigneCommande(QTextEdit):
+    returnPressed = Signal()
+
+    def __init__(self, ):
+        super(LigneCommande, self).__init__()
+        self.setWordWrapMode(QTextOption.NoWrap)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.setFixedHeight(28)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return  or event.key() == Qt.Key_Enter:
+            self.returnPressed.emit() 
+        else:
+            super(LigneCommande, self).keyPressEvent(event)
 
 class Terminal(QWidget):
     mise_a_jour = Signal()
@@ -89,16 +105,18 @@ class Terminal(QWidget):
     def __init__(self, cli, parent = None):
         super(Terminal, self).__init__(parent)
 
-        self.affichage = QTextBrowser(self)
+        self.affichage = QTextBrowser()
         self.affichage.setFont(QFont("Overpass Mono", 10))
+        self.affichage.setStyleSheet("color: #2A2B32; background: #F8F8F8;")
         self.coloration_syntax = ColorationSyntax(self.affichage.document())
         self.cli = cli
 
-        self.commande = QLineEdit(self)
+        self.commande = LigneCommande()
         self.commande.setFont(QFont("Overpass Mono", 10))
         self.commande.returnPressed.connect(self.envoyer_commande)
+        ColorationSyntax(self.commande.document())
 
-        self.layout = QGridLayout(self)
+        self.layout = QGridLayout()
         self.layout.addWidget(self.affichage, 0, 0)
         self.layout.addWidget(self.commande, 1, 0)
         self.setLayout(self.layout)
@@ -118,7 +136,7 @@ class Terminal(QWidget):
         self.affichage.ensureCursorVisible()
 
     def envoyer_commande(self):
-        print(">>> " + self.commande.text())
-        self.cli.commande(self.commande.text())
+        print(">>> " + self.commande.toPlainText())
+        self.cli.commande(self.commande.toPlainText())
         self.commande.clear()
         self.mise_a_jour.emit()

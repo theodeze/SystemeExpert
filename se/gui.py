@@ -200,11 +200,6 @@ class Menu(QMenuBar):
         self.mise_a_jour.emit()
 
     def contenu(self):
-        Log.critical("E")
-        Log.error("D")
-        Log.warning("C")
-        Log.debug("B")
-        Log.info("A")
         aide = Aide(self)
         aide.exec()
 
