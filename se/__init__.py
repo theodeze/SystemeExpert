@@ -8,6 +8,7 @@ from .basedefaits import *
 from .basederegles import *
 from .moteurdinference import *
 from .cli import *
+from .gui_colorationsyntax import *
 from .gui_dialog import *
 from .gui_terminal import *
 from .gui import *

@@ -30,6 +30,20 @@ class AnalyseurSyntaxique(AnalyseurSimple):
             return valeur
 
     @staticmethod
+    def analyse_valeur_fait(valeur):
+        valeur = valeur.strip()
+        if valeur.isdigit():
+            return float(valeur)
+        elif valeur == "True" or valeur == "Vrai":
+            return True
+        elif valeur == "False" or valeur == "Faux":
+            return False
+        elif valeur.startswith("\"") and valeur.endswith("\""):
+            return valeur
+        else:
+            raise Exception("N'est pas une valeur valide {}".format(valeur))
+
+    @staticmethod
     def verifier_valeurs(valeurs, lexeme):
         if len(valeurs) == 0:
             raise Exception("il manque deux valeurs {}".format(lexeme))
@@ -102,7 +116,7 @@ class AnalyseurSyntaxique(AnalyseurSimple):
             if len(conclusion.split("=")) < 2:
                 raise Exception("Invalide {}".format(chaine))
             symbole = AnalyseurSyntaxique.analyse_symbole(conclusion.split("=")[0])
-            valeur = AnalyseurSyntaxique.analyse_valeur(conclusion.split("=")[1])
+            valeur = AnalyseurSyntaxique.analyse_valeur_fait(conclusion.split("=")[1])
             conclusions.append(Fait(symbole, valeur))
         return conclusions
 
@@ -120,7 +134,7 @@ class AnalyseurSyntaxique(AnalyseurSimple):
             raise Exception("Invalide {}".format(chaine))
         AnalyseurSyntaxique.verifier_valeurs(chaine.split("="), chaine)
         symbole = AnalyseurSyntaxique.analyse_symbole(chaine.split("=")[0])
-        valeur = AnalyseurSyntaxique.analyse_valeur(chaine.split("=")[1])
+        valeur = AnalyseurSyntaxique.analyse_valeur_fait(chaine.split("=")[1])
         return Fait(symbole, valeur)
 
     @staticmethod
