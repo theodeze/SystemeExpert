@@ -395,6 +395,7 @@ class FenetrePrincipal(QMainWindow):
 
 
 def main_gui():
+    QTextCodec.setCodecForLocale(QTextCodec.codecForName("UTF-8"))
     qtTranslator = QTranslator()
     qtTranslator.load("qt_" + QLocale.system().name(),
                       QLibraryInfo.location(QLibraryInfo.TranslationsPath))
