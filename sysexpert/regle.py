@@ -1,4 +1,5 @@
-from se import Connecteur, Parenthese, Proposition, Operateur, Fait
+from sysexpert import Connecteur, Parenthese, Proposition, Operateur, Fait
+
 
 class Regle:
     num = 1
@@ -9,8 +10,8 @@ class Regle:
         self.nom = "R" + str(Regle.num)
         Regle.num += 1
         self.est_desactive = False
-    
-    def __str__(self):        
+
+    def __str__(self):
         chaine = self.nom + " : "
         premiere = True
         index = 0
@@ -22,7 +23,11 @@ class Regle:
                     chaine += str(proposition)
                 premiere = False
             else:
-                if isinstance(proposition, Connecteur) or isinstance(proposition, Parenthese):
+                if isinstance(
+                        proposition,
+                        Connecteur) or isinstance(
+                        proposition,
+                        Parenthese):
                     chaine += " " + str(proposition.value)
                 else:
                     chaine += " " + str(proposition)
@@ -45,12 +50,12 @@ class Regle:
             if isinstance(lex, Proposition):
                 lexemes_sortie.append(lex)
             elif isinstance(lex, Connecteur):
-                    pile_operateurs.append(lex)
+                pile_operateurs.append(lex)
             elif isinstance(lex, Parenthese):
                 if lex == Parenthese.OUVRANT:
                     pile_operateurs.append(lex)
                 elif lex == Parenthese.FERMANT:
-                    while pile_operateurs[-1] != Parenthese.OUVRANT :
+                    while pile_operateurs[-1] != Parenthese.OUVRANT:
                         lexemes_sortie.append(pile_operateurs.pop())
                     pile_operateurs.pop()
         while len(pile_operateurs) != 0:
@@ -83,7 +88,7 @@ class Regle:
         if isinstance(conclusion_a_chercher, Fait):
             for conclusion in self.conclusions:
                 if conclusion == conclusion_a_chercher:
-                    return True   
+                    return True
         if isinstance(conclusion_a_chercher, Proposition):
             fait = conclusion_a_chercher.en_fait(basedefaits)
             if isinstance(fait, bool):

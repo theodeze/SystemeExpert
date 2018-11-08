@@ -1,8 +1,9 @@
 import sys
-from se import Log, ColorationSyntax
+from sysexpert import Log, ColorationSyntax
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
+
 
 class Stream(QObject):
     newText = Signal((str,))
@@ -27,26 +28,25 @@ class LigneCommande(QTextEdit):
         self.setFixedHeight(28)
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Return  or event.key() == Qt.Key_Enter:
-            self.returnPressed.emit() 
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            self.returnPressed.emit()
         else:
             super(LigneCommande, self).keyPressEvent(event)
+
 
 class Terminal(QWidget):
     mise_a_jour = Signal()
 
-    def __init__(self, cli, parent = None):
+    def __init__(self, cli, parent=None):
         super(Terminal, self).__init__(parent)
 
         self.affichage = QTextBrowser()
         self.affichage.setFont(QFont("Overpass Mono", 10))
-        self.affichage.setStyleSheet("color: #2A2B32; background: #F8F8F8;")
         self.coloration_syntax = ColorationSyntax(self.affichage.document())
         self.cli = cli
 
         self.commande = LigneCommande()
         self.commande.setFont(QFont("Overpass Mono", 10))
-        self.commande.setStyleSheet("color: #2A2B32; background: #F8F8F8;")
         self.commande.returnPressed.connect(self.envoyer_commande)
         ColorationSyntax(self.commande.document())
 
@@ -57,10 +57,9 @@ class Terminal(QWidget):
 
         sys.stdout = Stream(self.afficher_commande)
         Log.init()
-        
+
     def __del__(self):
         sys.stdout = sys.__stdout__
-        Log.remove_log()
 
     def afficher_commande(self, text):
         cursor = self.affichage.textCursor()

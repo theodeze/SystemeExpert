@@ -1,14 +1,15 @@
 import collections
-from se import Log, Fait, Proposition, Operateur, Regle, BaseDeFaits, SelectionRegle
+from sysexpert import Log, Fait, Proposition, Operateur, Regle, BaseDeFaits, SelectionRegle
 
-class BaseDeRegles: 
+
+class BaseDeRegles:
 
     def __init__(self):
         self.regles = []
         self.strict = False
-    
+
     def __str__(self):
-        chaine =  "======== Base de Rêgle ========\n"
+        chaine = "======== Base de Rêgle ========\n"
         for regle in self.regles:
             chaine += str(regle) + "\n"
         chaine += "==============================="
@@ -28,22 +29,27 @@ class BaseDeRegles:
         return regles
 
     def peut_ajouter(self, regle_a_ajouter):
-        compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+        def compare(x, y): return collections.Counter(
+            x) == collections.Counter(y)
         conclusion_ok = True
         premisses_ok = True
         for regle in self.regles:
             if compare(regle_a_ajouter.conclusions, regle.conclusions):
                 if self.strict:
-                    Log.warning("Deux rêgles ont les même conclusion (Redondance)")
+                    Log.warning(
+                        "Deux rêgles ont les même conclusion (Redondance)")
                 else:
-                    Log.debug("Deux rêgles ont les même conclusion (Redondance)")
+                    Log.debug(
+                        "Deux rêgles ont les même conclusion (Redondance)")
                 conclusion_ok = False
             if regle_a_ajouter.premisses == regle.premisses:
                 if self.strict:
-                    Log.warning("Deux rêgles ont les même premisse (Incompatibilité)")
+                    Log.warning(
+                        "Deux rêgles ont les même premisse (Incompatibilité)")
                 else:
-                    Log.debug("Deux rêgles ont les même premisse (Incompatibilité)")
-                premisses_ok = False  
+                    Log.debug(
+                        "Deux rêgles ont les même premisse (Incompatibilité)")
+                premisses_ok = False
         if self.strict:
             return conclusion_ok and premisses_ok
         return conclusion_ok or premisses_ok
@@ -53,25 +59,26 @@ class BaseDeRegles:
         if self.peut_ajouter(regle):
             self.regles.append(regle)
         elif not self.strict:
-            Log.warning("Ajout de la regle imposible car le regle existe déjâ (Inconsitante)")
+            Log.warning(
+                "Ajout de la regle imposible car le regle existe déjâ (Inconsitante)")
 
     def applicable(self, basedefaits):
         for regle in self.regles:
             if regle.applicable(basedefaits):
                 return True
-        return False      
-    
+        return False
+
     def regles_applicable(self, basedefaits):
         regles = []
         for regle in self.regles:
             if regle.applicable(basedefaits):
                 regles.append(regle)
-        return regles          
-    
+        return regles
+
     @staticmethod
     def selection_tableau(tab_regle, basedefaits, selection_regle):
         if selection_regle == SelectionRegle.PREMIERE:
-             return tab_regle[0]
+            return tab_regle[0]
         elif selection_regle == SelectionRegle.COMPLEXE:
             max_complexe = -1
             R = tab_regle[0]
@@ -93,7 +100,8 @@ class BaseDeRegles:
         return None
 
     def selection(self, basedefaits, selection_regle):
-        Log.debug("Selection d'une règle parmis " + self.nom_regles(basedefaits))
+        Log.debug("Selection d'une règle parmis " +
+                  self.nom_regles(basedefaits))
         Log.debug("Avec la règle " + selection_regle.value)
         if selection_regle == SelectionRegle.PREMIERE:
             for regle in self.regles:

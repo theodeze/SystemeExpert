@@ -1,2 +1,0 @@
-B = True
-C = True := A == True || B == True

@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# other
+*.synctex.gz
+*.aux
+*.out
+*.fdb_latexmk
+*.fls
+*.toc
+*_minted-rapport
+.vscode

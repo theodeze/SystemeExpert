@@ -2,6 +2,10 @@
 
 ## Sujet
 
+On désire écrire un programme réalisant des tâches d'expertises dnas un domaine d'application tel que la météorologie, le dépannage automobile, la conception de mécanismes, ou tout autre domaine qui voussemble justifier l'utilisation d'un système a basees deègles de production pour réaliser des inférence.
+
+Après avoir défini votre langage de représentation des connaissances, vous programmerez un moteur d'inférences d'ordre Zero+ au minimum adapté à votre application. VOus le doterez de possibilités le rednant plus efficace plus souple à utiliser ou plus sûr. Par exemple:
+
 ### 1) Implémentation de différentes stratégies d'exploitation des règles:
 - [x] Chaînage avant
 - [x] Chaînage arriêre 
@@ -25,11 +29,7 @@
 ## Installation
 
 ```Bash
-$ git clone https://github.com/theodeze/SystemeExpert.git
-$ cd SystemeExpert 
-$ python3 setup.py install --user
-$ cd ..
-$ rm -rf SystemeExpert
+$ pip3 install sysexpert
 ```
 
 ## Utilisation

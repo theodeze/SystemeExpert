@@ -5,4 +5,4 @@ include *.md
 include LICENSE.txt
 
 # Include the resources files
-recursive-include se/res *
+recursive-include sysexpert/res *

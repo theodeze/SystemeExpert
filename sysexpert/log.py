@@ -4,16 +4,20 @@ import tempfile
 import os
 from logging.handlers import RotatingFileHandler
 
+
 class Log:
+    NAME_FILE = "sysexpert.log"
 
     @staticmethod
     def init():
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
 
-        file_handler = RotatingFileHandler(tempfile.gettempdir() + '/se.log', 'a')
+        file_handler = RotatingFileHandler(
+            tempfile.gettempdir() + '/' + Log.NAME_FILE, 'a')
         file_handler.setLevel(logging.DEBUG)
-        file_handler.setFormatter(logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s'))
+        file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s :: %(levelname)s :: %(message)s'))
         logger.addHandler(file_handler)
         stream_handler = logging.StreamHandler(sys.stdout)
         stream_handler.setLevel(logging.INFO)
@@ -23,12 +27,8 @@ class Log:
 
     @staticmethod
     def print():
-        with open(tempfile.gettempdir() + '/se.log', "r") as log:
+        with open(tempfile.gettempdir() + '/' + Log.NAME_FILE, "r") as log:
             print(log.read(), end='')
-
-    @staticmethod
-    def remove_log():
-        os.remove(tempfile.gettempdir() + '/se.log')
 
     @staticmethod
     def debug(chaine):

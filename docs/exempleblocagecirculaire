@@ -1,4 +1,0 @@
-A = True
-D = True : = B == True
-B = True : = D == True
-B = True : = A == True

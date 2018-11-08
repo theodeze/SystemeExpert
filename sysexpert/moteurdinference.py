@@ -1,11 +1,36 @@
-from se import Log, Fait, Proposition, Operateur, BaseDeFaits, BaseDeRegles, Connecteur, Regle, Trace, SelectionRegle
+from sysexpert import Log, Fait, Proposition, Operateur, BaseDeFaits, BaseDeRegles, Connecteur, Regle, Trace, SelectionRegle
 from pptree import *
+
 
 class MoteurDInferance:
 
     def __init__(self):
         self.trace = Trace.MIN
         self.selection_regle = SelectionRegle.PREMIERE
+
+    def saturation_basedefaits(self, basedefaits, basederegles):
+        iteration = 1
+        while basederegles.applicable(basedefaits):
+            regle = basederegles.selection(basedefaits, self.selection_regle)
+            if self.trace == Trace.MIN:
+                print("===============================")
+                print("Iteration " + str(iteration) + " :")
+                print("Déclenchement de " + regle.nom)
+            elif self.trace == Trace.OUI:
+                print("===============================")
+                print("Iteration " + str(iteration))
+                print("Règles déclenchables : " +
+                      basederegles.nom_regles(basedefaits))
+                print("Déclenchement de " + regle.nom)
+            regle.appliquer(basedefaits)
+            faits = "{ "
+            for fait in regle.conclusions:
+                faits += str(fait) + " "
+            faits += "}"
+            if self.trace == Trace.OUI:
+                print("Ajout des faits : " + faits)
+            regle.est_desactive = True
+            iteration += 1
 
     def chainage_avant(self, basedefaits, basederegles, fait_a_etablir):
         iteration = 1
@@ -19,7 +44,8 @@ class MoteurDInferance:
             elif self.trace == Trace.OUI:
                 print("===============================")
                 print("Iteration " + str(iteration))
-                print("Règles déclenchables : " + basederegles.nom_regles(basedefaits))
+                print("Règles déclenchables : " +
+                      basederegles.nom_regles(basedefaits))
                 print("Déclenchement de " + regle.nom)
             regle.appliquer(basedefaits)
             faits = "{ "
@@ -31,7 +57,7 @@ class MoteurDInferance:
             regle.est_desactive = True
             valide = basedefaits.contient(fait_a_etablir)
             iteration += 1
-        
+
         # Affichage résultat
         print("=== Résultat chainage avant ===")
         print(str(fait_a_etablir))
@@ -46,43 +72,57 @@ class MoteurDInferance:
 
         return valide
 
-    def chainage_arriere(self, basedefaits, basederegles, fait_a_etablir, noeud_parent, faits_precedent):
+    def chainage_arriere(
+            self,
+            basedefaits,
+            basederegles,
+            fait_a_etablir,
+            noeud_parent,
+            faits_precedent):
         if basedefaits.contient(fait_a_etablir):
-            if noeud_parent == None:
+            if noeud_parent is None:
                 print("== Résultat chainage arriere ==")
                 print(str(fait_a_etablir))
                 print("Fait établie")
                 print("===============================")
             Node(str(fait_a_etablir) + " dans BF", noeud_parent)
             return True
-        
+
         # Gestion de l'arbre
-        if noeud_parent == None:
+        if noeud_parent is None:
             noeud = Node(str(fait_a_etablir))
             faits_precedent = []
         else:
             noeud = Node(str(fait_a_etablir), noeud_parent)
 
         # Gestion des Blogages circulaire
-        if faits_precedent == None:
+        if faits_precedent is None:
             faits_precedent = []
         elif fait_a_etablir in faits_precedent:
             Node("Bouclage", noeud)
             return False
         faits_precedent.append(fait_a_etablir)
 
-        ER = basederegles.list_regles_ayant_conclusion(fait_a_etablir, basedefaits)
+        ER = basederegles.list_regles_ayant_conclusion(
+            fait_a_etablir, basedefaits)
         R = None
         valide = False
         while not valide and ER != []:
-            valide = True # plus besoin
-            R = basederegles.selection_tableau(ER, basedefaits, self.selection_regle)
+            valide = True  # plus besoin
+            R = basederegles.selection_tableau(
+                ER, basedefaits, self.selection_regle)
             noeud2 = Node(str(R), noeud)
             ER.remove(R)
             pile_valeurs = []
             for lex in Regle.conversion_infixee_en_postfixee(R.premisses):
                 if isinstance(lex, Proposition):
-                    pile_valeurs.append(self.chainage_arriere(basedefaits, basederegles, lex, noeud2, faits_precedent))
+                    pile_valeurs.append(
+                        self.chainage_arriere(
+                            basedefaits,
+                            basederegles,
+                            lex,
+                            noeud2,
+                            faits_precedent))
                 elif isinstance(lex, Connecteur):
                     if len(pile_valeurs) < 2:
                         raise Exception("Erreur dans l'expression")
@@ -101,12 +141,12 @@ class MoteurDInferance:
             basedefaits.ajouter(fait_a_etablir)
             for conclusion in R.conclusions:
                 basedefaits.ajouter(conclusion)
-        elif noeud_parent != None:
+        elif noeud_parent is not None:
             Node("Echec", noeud)
             return False
 
         # Affichage résultat
-        if noeud_parent == None:
+        if noeud_parent is None:
             if self.trace != Trace.NON:
                 print("===============================")
                 print_tree(noeud)

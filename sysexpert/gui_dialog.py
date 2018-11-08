@@ -1,12 +1,13 @@
 import os
-from se import CLI, AnalyseurSyntaxique, Fait, Trace, SelectionRegle
+from sysexpert import CLI, AnalyseurSyntaxique, Fait, Trace, SelectionRegle
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
+
 class Configuration(QDialog):
 
-    def __init__(self, cli, parent = None):
+    def __init__(self, cli, parent=None):
         super(Configuration, self).__init__(parent)
         self.setWindowTitle("Configuration")
         self.layout = QVBoxLayout()
@@ -26,7 +27,8 @@ class Configuration(QDialog):
         self.config.addWidget(self.trace)
 
         self.regle = QGroupBox("Choix de la règle déclenchée")
-        self.plus = QRadioButton("Règles ayant le plus de prémisses à satisfaire")
+        self.plus = QRadioButton(
+            "Règles ayant le plus de prémisses à satisfaire")
         self.complexe = QRadioButton("Complexité d'évaluation des prémisses")
         self.premiere = QRadioButton("Premiere règle")
         self.regle_layout = QVBoxLayout()
@@ -81,14 +83,14 @@ class Configuration(QDialog):
 
     def valide(self):
         self.accept()
-        
+
     def annule(self):
         self.reject()
 
 
 class Aide(QDialog):
 
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         super(Aide, self).__init__(parent)
         self.setWindowTitle("Aide")
         self.layout = QHBoxLayout()
@@ -97,10 +99,12 @@ class Aide(QDialog):
         self.msg_accueil.setAlignment(Qt.AlignCenter)
         self.tabs.addTab(self.msg_accueil, "Accueil")
         self.terminal = QTextBrowser()
-        self.terminal.setText(open(os.path.dirname(__file__) + "/res/html/aide_terminal.html", 'r').read())
+        self.terminal.setText(open(os.path.dirname(
+            __file__) + "/res/html/aide_terminal.html", 'r').read())
         self.tabs.addTab(self.terminal, "Terminal")
         self.fichier = QTextBrowser()
-        self.fichier.setText(open(os.path.dirname(__file__) + "/res/html/aide_fichier.html", 'r').read())
+        self.fichier.setText(open(os.path.dirname(
+            __file__) + "/res/html/aide_fichier.html", 'r').read())
         self.tabs.addTab(self.fichier, "Fichier")
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
@@ -109,11 +113,12 @@ class Aide(QDialog):
 
 class APropos(QDialog):
 
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         super(APropos, self).__init__(parent)
         self.setWindowTitle("A propos")
         self.layout = QVBoxLayout()
-        self.texte = QLabel(open(os.path.dirname(__file__) + "/res/html/apropos.html", 'r').read())
+        self.texte = QLabel(open(os.path.dirname(
+            __file__) + "/res/html/apropos.html", 'r').read())
         self.texte.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.texte.setOpenExternalLinks(True)
         self.layout.addWidget(self.texte)
@@ -122,7 +127,7 @@ class APropos(QDialog):
 
 class DemandeFait(QDialog):
 
-    def __init__(self, title, parent = None):
+    def __init__(self, title, parent=None):
         super(DemandeFait, self).__init__(parent)
         self.setWindowTitle(title)
         self.layout = QVBoxLayout()

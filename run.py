@@ -1,3 +1,3 @@
-from se import main_gui
+from sysexpert import main_gui
 
 main_gui()

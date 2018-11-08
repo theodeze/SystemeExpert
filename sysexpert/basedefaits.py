@@ -1,12 +1,13 @@
-from se import Log, Proposition, Operateur, Fait
+from sysexpert import Log, Proposition, Operateur, Fait
+
 
 class BaseDeFaits:
-    
+
     def __init__(self):
         self.faits = []
 
     def __str__(self):
-        chaine =  "======== Base de Faits ========\n"
+        chaine = "======== Base de Faits ========\n"
         for fait in self.faits:
             chaine += str(fait) + "\n"
         chaine += "==============================="
@@ -34,7 +35,8 @@ class BaseDeFaits:
                 else:
                     Log.debug("Oui")
                 return fait_a_verifier
-            Log.debug("Contient le fait " + str(fait_a_verifier) + " (" + str(proposition_a_verifier)  + ") ?")
+            Log.debug("Contient le fait " + str(fait_a_verifier) +
+                      " (" + str(proposition_a_verifier) + ") ?")
             operateur_a_verifier = proposition_a_verifier.quel_operateur(self)
             for fait in self.faits:
                 if operateur_a_verifier == Operateur.EGALITE:
@@ -99,13 +101,15 @@ class BaseDeFaits:
             Log.debug("Ajout du fait " + str(fait_a_ajouter))
             for fait in self.faits:
                 if fait.symbole == fait_a_ajouter.symbole:
-                    if fait.valeur == None:
+                    if fait.valeur is None:
                         fait.valeur = fait_a_ajouter.valeur
                         return
                     elif fait.valeur == fait_a_ajouter.valeur:
                         return
                     else:
-                        Log.warning("Ajout du fait imposible car le fait existe déjâ (Inconsitante)")
+                        Log.warning(
+                            "Ajout du fait imposible car le fait existe déjâ (Inconsitante)")
+                        return
             self.faits.append(fait_a_ajouter)
 
     def valeur_fait(self, symbole):

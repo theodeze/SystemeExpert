@@ -1,0 +1,12 @@
+Douleur = "Gorge"
+Fièvre = Vrai
+Sexe = "Homme"
+
+Appendicite = Vrai := Douleur == "Abdomen" & Vomissement == Faux
+Intoxication alimentaire := Douleur == "Abdomen" & Vomissement == Vrai
+Dysménorrhée  = Vrai := Douleur == "Abdomen" & Sexe = "Femme"
+Rhume = Vrai := Douleur == "Gorge" & Fièvre == Vrai
+Infarctus = Vrai := Douleur == "Poitrine"
+Mal de gorge = Vrai := Douleur == "Gorge" & Fièvre == Faux
+Rhume = Vrai := Douleur == "Aucun" & Toux == Vrai & Fièvre == Vrai
+Refroidissement = Vrai := Douleur == "Aucun" & Toux == Vrai & Fièvre == Faux

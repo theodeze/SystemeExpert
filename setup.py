@@ -2,26 +2,33 @@ from setuptools import setup, find_packages
 from os import path
 
 here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='SystemeExpert',
-    version='0.5',
+    name='sysexpert',
+    version='0.1',
     description='Systeme Expert 0+',
     long_description=long_description,
     long_description_content_type='text/markdown',
+    license='LICENSE.txt',
+    author='Théo Dézé, Charles Mallet',
+    author_email='theo.deze@etud.univ-angers.fr, charles.mallet@etud.univ-angers.fr',
     url='https://github.com/theodeze/SystemeExpert',
-    packages=find_packages(exclude=['docs']),
-    install_requires=['pptree','pyside2'],
+    python_requires='>=3',
+    packages=find_packages(
+        exclude=['docs']),
+    install_requires=[
+        'pptree>=2.0',
+        'pyside2>=5.9.0'],
     include_package_data=True,
-    package_data={'res/fonts': ['*.ttf'],
-                'res/html' : ['*.html'],
-                'res/icons' : ['*.svg']},
+    package_data={
+        'res/fonts': ['*.ttf'],
+        'res/html': ['*.html'],
+        'res/icons': ['*.svg']},
     entry_points={
         'console_scripts': [
-            'se-cli = se:main_cli',
-            'se-gui = se:main_gui',
+            'se-cli = sysexpert:main_cli',
+            'se-gui = sysexpert:main_gui',
         ],
-    }
-)
+    })

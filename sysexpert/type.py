@@ -1,5 +1,6 @@
 from enum import Enum, unique
 
+
 @unique
 class Operateur(Enum):
     EGALITE = "=="
@@ -42,6 +43,8 @@ class AnalyseurSimple:
     def est_fait(expression):
         if isinstance(expression, bool):
             return False
+        if isinstance(expression, int):
+            return False
         if isinstance(expression, float):
             return False
         if expression.startswith('"') and expression.endswith('"'):
@@ -51,6 +54,8 @@ class AnalyseurSimple:
     @staticmethod
     def valuer_expression(expression, basedefaits):
         if isinstance(expression, bool):
+            return expression
+        if isinstance(expression, int):
             return expression
         if isinstance(expression, float):
             return expression
