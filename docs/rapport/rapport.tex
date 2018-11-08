@@ -11,7 +11,7 @@
 \begin{document}
 
 \title{IA1 : Système Expert}
-\author{Théo Dézé \and Charles Mallet}
+\author{Théo \textsc{Dézé}  \& Charles \textsc {Mallet}}
 \date{9 Novembre 2018} 
 
 \maketitle
@@ -22,74 +22,74 @@
 
 \part{Introduction}
 
-Pour le projet nous avons décider de travailliez sur un problème de diagnostique médical. Nous avons défini différentes maladies qui sont a vrais si le patient les a.
+Pour le projet, nous avons décidé de travailler sur un problème de diagnostique médical. Nous avons défini différentes maladies qui sont à "vrai" si le patient les a.
 
 \section{Faits}
 
-Nos faits sont de trois nature soit ce sont des informations sur les symptômes du patient, soit sur ces attributs ou sur les maladies qu'il a. 
+Nos faits sont de trois natures. Soit il s'agit d'informations sur les symptômes du patient, soit ils portent sur ces attributs ou sur les maladies qu'il a. 
 
-Comme nous somme sur un moteur d'inférence 0+ nos faits peuvent valoir une valeur booléenne, une chaîne de caractère ou un chiffre (pas dans ce cas mais on a peut le tester dans cas météorologie\footnote{Disponible dans le répertoire docs du projets.}).
+Comme nous sommes sur un moteur d'inférences 0+, nos faits peuvent valoir une valeur booléenne, une chaîne de caractères ou un chiffre (pas dans ce cas mais on peut les tester dans le cas Météorologie\footnote{Disponible dans le répertoire docs du projet.}).
 
 \paragraph{Exemple}
 
 \begin{description}
-    \item[Symptômes] La zone des douleurs (Poitrine, Gorge, Abdomen, Aucun), si le patient a de la fièvre, toux et vomissement.
+    \item[Symptômes] La zone des douleurs (Poitrine, Gorge, Abdomen, Aucun); le patient a de la fièvre, de la toux ou des vomissements.
     \item[Attributs] Le sexe de la personne.
     \item[Maladies] Maladie que le patient peut avoir (Rhume, Infarctus, Appendicite, etc).
 \end{description}
 
 \section{Règles}
 
-Nous avons organisez notre choix des règles selon un arbre décisionnelle voir figure \ref{arbre}. Cela correspond a des questions que pourrais poser un médecin a un patient pour déterminer la maladie du patient.
+Nous avons organisé notre choix des règles selon un arbre décisionnel (voir figure \ref{arbre}). Cela correspond a des questions que pourraient poser un médecin à un patient pour déterminer la maladie du patient.
 
-il est possibles que le patient est plusieurs maladie possible, cela est dus que notre arbre est très simplifier et que comme nous n'avons pas implémenter le chaînage mixte.
+Il est possible que le patient ait plusieurs maladies. Cela est dû au fait que notre arbre est très simplifié et que nous n'avons pas implémenté le chaînage mixte.
 
-Ce qui oblige l'utilisateur à fournir tous les informations alors que si on avais un chaînage mixte on demanderais au patient que ce qui est utile. 
+Ce dernier point oblige l'utilisateur à fournir toutes les informations. Au contraire, si on avait eu un chaînage mixte, on aurait pu demander au patient seulement ce qui est utile. 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=15cm]{arbre.png}
-    \caption{\label{arbre} Arbre décisionnelle}
+    \caption{\label{arbre} Arbre décisionnel}
 \end{figure}
 
 \section{Choix du langage}
 
-Nous avons choisi de partir sur du python car il présente l'avantage d'être fortement typé mais être dynamique ce qui nous permet facilement de géré les valeurs qui sont de nature différentes.
+Nous avons choisi de partir sur du python car il présente l'avantage d'être fortement typé mais également d'être dynamique ce qui nous permet facilement de gérer les valeurs qui sont de natures différentes.
 
-Pour l'interface on a choisi d'utiliser le package pyside2 qui permet d'utiliser du qt que nous avons déjà vus en C++ avec python et qui est le package officiel.
+Pour l'interface, nous nous sommes servis du package pyside2 qui permet d'utiliser, en python, Qt que nous avons déjà vus en C++, et qui en est le package officiel.
 
 \part{Système Expert}
 
-\section{Base de connaissance}
+\section{Base de connaissances}
 
-Notre base de connaissance est constituer de la base de faits et la base de règles qui sont simplement des tableaux de faits et de règles.
+Notre base de connaissances est constitué de la base de faits et la base de règles qui correspondant à des tableaux de faits et de règles.
 
-Elle peut être enrichie a l'aide de fichier ou simplement de l'interface.
+Elle peut être enrichie à l'aide de fichiers ou bien de l'interface.
 
 \subsection{Fichier}
 
-Le fichier permet de déclarer des faits et des règles voir en-dessous.
-On ne peut avoir que un fait ou règle par ligne mais on faire une ligne de commentaire avec le symbole '\#'.
+Le fichier permet de déclarer des faits et des règles (voir en-dessous).
+On ne peut avoir qu'un fait ou une règle par ligne mais aussi écrire une ligne de commentaires avec le symbole '\#'.
 
-Proposition on peut aussi ajouter des ou '||' et des parenthèses, les parenthèses nous on poser un problème ce qui nous a obliger a convertir nos expression in-fixe en post-fixe pour pourvoir les calculer.  
+Pour ce qui est des propositions, on peut aussi ajouter des ou (exprimé ainsi '||') et des parenthèses. Les parenthèses nous ont posé un problème. En effet, nous avons été obligés de convertir nos expressions in-fixe en post-fixe pour pouvoir les calculer.  
 
 \inputminted{sql}{../maladies.txt}
 
 \subsection{Interface}
 
-Selon l'interface plusieurs méthode sont disponible mais le plus simple qui marche sur les deux est de taper un ligne comme vous le feriez dans le fichier et de validé.
+Selon l'interface, plusieurs méthodes sont disponibles seulement, la plus simple est de taper une ligne comme vous pouvez le faire dans le fichier et de valider.
 
-\section{Moteur d'inférence}
+\section{Moteur d'inférences}
 
-Nous avons implémenter le chaînage avant avec but ou juste pour sature la base de connaissance et le chaînage arrière.
+Nous avons implémenté le chaînage avant avec but ou juste pour sature la base de connaissances et le chaînage arrière.
 
-A la fin de l'exécution, il affiche un résultat et le cheminement selon la configuration (changeable). Il est possible de voir le log en tapent la commande "log" pour voir tous le commandes disponible, il suffit de taper "aide".
+À la fin de l'exécution, il affiche un résultat et le cheminement selon la configuration (changeable). Il est possible de voir le log en tapent la commande "log" et pour lire toutes les commandes disponibles, il suffit de taper "aide".
 
 \section{Interface utilisateur}
 
-Nous avons développez deux interfaces, une en ligne de commande et une graphique. 
+Nous avons développé deux interfaces, une en ligne de commandes et une graphique. 
 
-\subsection{Ligne de commande}
+\subsection{Ligne de commandes}
 
 \begin{figure}[H]
     \centering
@@ -97,7 +97,7 @@ Nous avons développez deux interfaces, une en ligne de commande et une graphiqu
     \caption{\label{cli} SE-CLI}
 \end{figure}
 
-L'interface un ligne de commande s'inspire de l'interpréteur de python.
+L'interface un ligne de commandes s'inspire de l'interpréteur de python.
 
 \subsection{Graphique}
 
@@ -107,16 +107,16 @@ L'interface un ligne de commande s'inspire de l'interpréteur de python.
     \caption{\label{gui} SE-GUI}
 \end{figure}
 
-L'interface permet de simplifier l'utilisation pour un utilisateur qui n'est pas habitué par l'utilisation du terminal.
+L'interface permet de simplifier l'utilisation pour un utilisateur qui n'est pas habitué à manipuler un terminal.
 
-La plupart des commandes peuvent êtres exécuter à l'aide de bouton. Mais il est toujours possible de taper les commande comme sur la version en ligne de commande.
+La plupart des commandes peuvent être exécutées à l'aide de boutons. Bien sûr, il est toujours possible de taper les commandes comme sur la version en ligne de commandes.
 
 \paragraph{Composition de l'interface}
 
 \begin{description}
-    \item[Terminal] Il est constitué d'un affichage et d'une ligne de saisie. Il s'utilise exactement comme la version en ligne de commande.
-    \item[Dock] Il permet d'afficher le base de connaissance et permet de modifier/ajouter un fait très simplement.
-    \item[Barre d'outils] Il donne accès aux commandes importantes.
+    \item[Terminal] Il est constitué d'un affichage et d'une ligne de saisie. Il s'utilise exactement comme la version en ligne de commandes.
+    \item[Dock] Il permet d'afficher la base de connaissances et de ajouter/modifier un fait.
+    \item[Barre d'outils] Elle donne accès aux commandes importantes.
 \end{description}
 
 \part{Conclusion}
@@ -127,12 +127,12 @@ Voici une liste des améliorations possibles:
 
 \begin{itemize}
     \item Ajouter des coefficients de certitude. Pour représenter des événements incertains.
-    \item Représenter les faits sous la forme de n-uplet pour faciliter les regroupement des faits exemple AgeBob = 25 devient (Bob,age,25) ou ParentsBob = "Léo Léa" devient (Bob,parents,Léo,Léa).
+    \item Représenter les faits sous la forme de n-uplet pour faciliter les regroupements des faits. Exemple : AgeBob = 25 devient (Bob,age,25) ou ParentsBob = "Léo Léa" devient (Bob,parents,Léo,Léa).
     \item Transformer le moteur 0+ en 1.
 \end{itemize}
 
 \section{Le code source du projet}
 
-Tous les code sources du projet et ce document sont disponible sur \url{https://github.com/theodeze/SystemeExpert}
+Toutes les sources du projet et ce document sont disponibles sur \url{https://github.com/theodeze/SystemeExpert}
 
 \end{document}
