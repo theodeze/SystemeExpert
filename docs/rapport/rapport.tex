@@ -97,7 +97,7 @@ Nous avons développé deux interfaces, une en ligne de commandes et une graphiq
     \caption{\label{cli} SE-CLI}
 \end{figure}
 
-L'interface un ligne de commandes s'inspire de l'interpréteur de python.
+L'interface une ligne de commandes s'inspire de l'interpréteur de python. Elle permet de faire tout ce que proposes l'interface graphique. Comme l'interpréteur de python, il lit chaque ligne comme si c'était une ligne d'un fichier.
 
 \subsection{Graphique}
 
@@ -131,8 +131,16 @@ Voici une liste des améliorations possibles:
     \item Transformer le moteur 0+ en 1.
 \end{itemize}
 
-\section{Le code source du projet}
+\section{Code source du projet}
 
 Toutes les sources du projet et ce document sont disponibles sur \url{https://github.com/theodeze/SystemeExpert}
+
+De plus le projet est disponible sur pypi à l'adresse \url{https://pypi.org/project/sysexpert}. Il suffit de taper cette commande pour télécharger le projet.
+
+\begin{minted}{bash}
+    pip install sysexpert
+    se-cli # Interface en ligne de commande
+    se-gui # Interface graphique
+\end{minted}
 
 \end{document}
