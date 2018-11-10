@@ -1,3 +1,0 @@
-    pip install sysexpert
-    se-cli # Interface en ligne de commandes
-    se-gui # Interface graphique

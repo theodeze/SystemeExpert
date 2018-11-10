@@ -7,7 +7,7 @@ with open(path.join(here, 'README.md')) as f:
 
 setup(
     name='sysexpert',
-    version='0.1',
+    version='0.2',
     description='Systeme Expert 0+',
     long_description=long_description,
     long_description_content_type='text/markdown',
