@@ -26,7 +26,7 @@ Pour le projet, nous avons décidé de travailler sur un problème de diagnostiq
 
 \section{Faits}
 
-Nos faits sont de trois natures. Soit il s'agit d'informations sur les symptômes du patient, soit ils portent sur ces attributs ou sur les maladies qu'il a. 
+Nos faits sont de trois natures. Soit il s'agit d'informations sur les symptômes du patient, soit ils portent sur ses attributs ou sur les maladies qu'il a. 
 
 Comme nous sommes sur un moteur d'inférences 0+, nos faits peuvent valoir une valeur booléenne, une chaîne de caractères ou un chiffre (pas dans ce cas mais on peut les tester dans le cas Météorologie\footnote{Disponible dans le répertoire docs du projet.}).
 
@@ -40,7 +40,7 @@ Comme nous sommes sur un moteur d'inférences 0+, nos faits peuvent valoir une v
 
 \section{Règles}
 
-Nous avons organisé notre choix des règles selon un arbre décisionnel (voir figure \ref{arbre}). Cela correspond a des questions que pourraient poser un médecin à un patient pour déterminer la maladie du patient.
+Nous avons organisé notre choix des règles selon un arbre décisionnel (voir figure \ref{arbre}). Cela correspond à des questions que pourraient poser un médecin à un patient pour déterminer la maladie du patient.
 
 Il est possible que le patient ait plusieurs maladies. Cela est dû au fait que notre arbre est très simplifié et que nous n'avons pas implémenté le chaînage mixte.
 
@@ -62,7 +62,7 @@ Pour l'interface, nous nous sommes servis du package pyside2 qui permet d'utilis
 
 \section{Base de connaissances}
 
-Notre base de connaissances est constitué de la base de faits et la base de règles qui correspondant à des tableaux de faits et de règles.
+Notre base de connaissances est constituée de la base de faits et la base de règles qui correspondent à des tableaux de faits et de règles.
 
 Elle peut être enrichie à l'aide de fichiers ou bien de l'interface.
 
@@ -71,7 +71,7 @@ Elle peut être enrichie à l'aide de fichiers ou bien de l'interface.
 Le fichier permet de déclarer des faits et des règles (voir en-dessous).
 On ne peut avoir qu'un fait ou une règle par ligne mais aussi écrire une ligne de commentaires avec le symbole '\#'.
 
-Pour ce qui est des propositions, on peut aussi ajouter des ou (exprimé ainsi '||') et des parenthèses. Les parenthèses nous ont posé un problème. En effet, nous avons été obligés de convertir nos expressions in-fixe en post-fixe pour pouvoir les calculer.  
+Pour ce qui est des propositions, on peut aussi ajouter des ou (exprimés ainsi '||') et des parenthèses. Les parenthèses nous ont posé un problème. En effet, nous avons été obligés de convertir nos expressions in-fixe en post-fixe pour pouvoir les calculer.  
 
 \inputminted{sql}{../maladies.txt}
 
@@ -81,7 +81,7 @@ Selon l'interface, plusieurs méthodes sont disponibles seulement, la plus simpl
 
 \section{Moteur d'inférences}
 
-Nous avons implémenté le chaînage avant avec but ou juste pour sature la base de connaissances et le chaînage arrière.
+Nous avons implémenté le chaînage avant avec but ou, juste pour sature, la base de connaissances et le chaînage arrière.
 
 À la fin de l'exécution, il affiche un résultat et le cheminement selon la configuration (changeable). Il est possible de voir le log en tapent la commande "log" et pour lire toutes les commandes disponibles, il suffit de taper "aide".
 
@@ -97,7 +97,7 @@ Nous avons développé deux interfaces, une en ligne de commandes et une graphiq
     \caption{\label{cli} SE-CLI}
 \end{figure}
 
-L'interface une ligne de commandes s'inspire de l'interpréteur de python. Elle permet de faire tout ce que proposes l'interface graphique. Comme l'interpréteur de python, il lit chaque ligne comme si c'était une ligne d'un fichier.
+L'interface une ligne de commandes s'inspire de l'interpréteur de python. Elle permet de faire tout ce que propose l'interface graphique. Comme l'interpréteur de python, il lit chaque ligne comme si c'était une ligne d'un fichier.
 
 \subsection{Graphique}
 
@@ -115,7 +115,7 @@ La plupart des commandes peuvent être exécutées à l'aide de boutons. Bien s�
 
 \begin{description}
     \item[Terminal] Il est constitué d'un affichage et d'une ligne de saisie. Il s'utilise exactement comme la version en ligne de commandes.
-    \item[Dock] Il permet d'afficher la base de connaissances et de ajouter/modifier un fait.
+    \item[Dock] Il permet d'afficher la base de connaissances et d'ajouter/de modifier un fait.
     \item[Barre d'outils] Elle donne accès aux commandes importantes.
 \end{description}
 
@@ -126,7 +126,7 @@ La plupart des commandes peuvent être exécutées à l'aide de boutons. Bien s�
 Voici une liste des améliorations possibles:
 
 \begin{itemize}
-    \item Ajouter des coefficients de certitude. Pour représenter des événements incertains.
+    \item Ajouter des coefficients de certitude, pour représenter des événements incertains.
     \item Représenter les faits sous la forme de n-uplet pour faciliter les regroupements des faits. Exemple : AgeBob = 25 devient (Bob,age,25) ou ParentsBob = "Léo Léa" devient (Bob,parents,Léo,Léa).
     \item Transformer le moteur 0+ en 1.
 \end{itemize}
@@ -135,11 +135,11 @@ Voici une liste des améliorations possibles:
 
 Toutes les sources du projet et ce document sont disponibles sur \url{https://github.com/theodeze/SystemeExpert}
 
-De plus le projet est disponible sur pypi à l'adresse \url{https://pypi.org/project/sysexpert}. Il suffit de taper cette commande pour télécharger le projet.
+De plus, le projet est disponible sur pypi à l'adresse \url{https://pypi.org/project/sysexpert}. Il suffit de taper cette commande pour le télécharger.
 
 \begin{minted}{bash}
     pip install sysexpert
-    se-cli # Interface en ligne de commande
+    se-cli # Interface en ligne de commandes
     se-gui # Interface graphique
 \end{minted}
 
