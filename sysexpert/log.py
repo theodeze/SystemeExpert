@@ -14,7 +14,7 @@ class Log:
         logger.setLevel(logging.DEBUG)
 
         file_handler = RotatingFileHandler(
-            tempfile.gettempdir() + '/' + Log.NAME_FILE, 'a')
+            tempfile.gettempdir() + '/' + Log.NAME_FILE, 'a', encoding='utf8')
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(logging.Formatter(
             '%(asctime)s :: %(levelname)s :: %(message)s'))
@@ -27,7 +27,7 @@ class Log:
 
     @staticmethod
     def print():
-        with open(tempfile.gettempdir() + '/' + Log.NAME_FILE, "r") as log:
+        with open(tempfile.gettempdir() + '/' + Log.NAME_FILE, 'r', encoding='utf8') as log:
             print(log.read(), end='')
 
     @staticmethod

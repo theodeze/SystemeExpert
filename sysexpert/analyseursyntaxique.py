@@ -179,7 +179,7 @@ class AnalyseurSyntaxique(AnalyseurSimple):
 
     @staticmethod
     def analyse_fichier(nom_fichier, basedefaits, basederegles):
-        with open(nom_fichier) as fichier:
+        with open(nom_fichier, 'r', encoding="utf-8") as fichier:
             for ligne in fichier:
                 chaine = AnalyseurSyntaxique.retire_commentaire(
                     ligne.split("\n")[0])

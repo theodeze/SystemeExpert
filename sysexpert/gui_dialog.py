@@ -100,11 +100,11 @@ class Aide(QDialog):
         self.tabs.addTab(self.msg_accueil, "Accueil")
         self.terminal = QTextBrowser()
         self.terminal.setText(open(os.path.dirname(
-            __file__) + "/res/html/aide_terminal.html", 'r').read())
+            __file__) + "/res/html/aide_terminal.html", 'r', encoding="utf-8").read())
         self.tabs.addTab(self.terminal, "Terminal")
         self.fichier = QTextBrowser()
         self.fichier.setText(open(os.path.dirname(
-            __file__) + "/res/html/aide_fichier.html", 'r').read())
+            __file__) + "/res/html/aide_fichier.html", 'r', encoding="utf-8").read())
         self.tabs.addTab(self.fichier, "Fichier")
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
@@ -118,7 +118,7 @@ class APropos(QDialog):
         self.setWindowTitle("A propos")
         self.layout = QVBoxLayout()
         self.texte = QLabel(open(os.path.dirname(
-            __file__) + "/res/html/apropos.html", 'r').read())
+            __file__) + "/res/html/apropos.html", 'r', encoding="utf-8").read())
         self.texte.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.texte.setOpenExternalLinks(True)
         self.layout.addWidget(self.texte)
